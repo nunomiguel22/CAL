@@ -20,7 +20,6 @@ int min_coins(int *coinValues, int ind, int value){
 	return coins;
 }
 
-
 string calcChange(int m, int numCoins, int *coinValues) {
 
 	if (!m)
@@ -42,6 +41,7 @@ string calcChange(int m, int numCoins, int *coinValues) {
 	}
 
 	//Parse string
+	//int ind = best[m];
 	int ind = best;
 	stringstream ss;
 	while (m > 0){
