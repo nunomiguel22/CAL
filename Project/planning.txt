@@ -1,0 +1,32 @@
+TODO:
+
+Consola:
+    Input do utilizador
+    Menus do programa
+
+Utilizador:
+    Classe de utilizador
+
+Mapa: 
+    Escolher mapa do openstreetmaps, atribuir como fundo do graphviewer
+    Extrair,fazer parse das coordendas do openstreetmaps 
+    Criar coordenadas para representaçao no graphviewer
+    Atribuir peso a cada aresta, tempo (baseado na distancia)
+
+Grafo:
+    Classe do grafo 
+    Classe das vertices
+    Classe das arestas
+    Criar Algoritmo de Dijkstra, guardando o caminho
+    Output do resultado
+
+Rota(Parte final):
+    Algoritmo para criar rotas usando o grafo do mapa
+    Output da rota num conjunto de arestas
+    Visualizaçao da rota no graphviewer
+    Geração do resto dos dados de saida
+    
+
+
+
+
