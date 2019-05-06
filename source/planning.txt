@@ -14,11 +14,12 @@ Mapa:
     Atribuir peso a cada aresta, tempo (baseado na distancia)
 
 Grafo:
-    Classe do grafo 
-    Classe das vertices
-    Classe das arestas
-    Criar Algoritmo de Dijkstra, guardando o caminho
-    Output do resultado
+    Classe do grafo -DONE
+    Classe das vertices -DONE
+    Classe das arestas -DONE
+    Criar Algoritmo de Dijkstra, guardando o caminho -DONE
+    Output do resultado -DONE
+    Retornar vertice adjancente com menos peso
 
 Rota(Parte final):
     Algoritmo para criar rotas usando o grafo do mapa
