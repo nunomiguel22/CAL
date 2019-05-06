@@ -23,7 +23,7 @@ template <class T> class Vertex;
 template <class T>
 class Vertex {
 	T info;                // contents
-	vector<Edge<T> > adj;  // outgoing edges
+	std::vector<Edge<T> > adj;  // outgoing edges
 	bool visited;          // auxiliary field
 	double dist = 0;
 	Vertex<T> *path = NULL;
@@ -96,18 +96,18 @@ Edge<T>::Edge(Vertex<T>*o, Vertex<T> *d, double w): origin(o), dest(d), weight(w
 
 template <class T>
 class Graph {
-	vector<Vertex<T> *> vertexSet;    // vertex set
+	std::vector<Vertex<T> *> vertexSet;    // vertex set
 
 public:
 	Vertex<T> *findVertex(const T &in) const;
 	bool addVertex(const T &in);
 	bool addEdge(const T &sourc, const T &dest, double w);
 	int getNumVertex() const;
-	vector<Vertex<T> *> getVertexSet() const;
+	std::vector<Vertex<T> *> getVertexSet() const;
 
 	void dijkstraShortestPath(const T &s);
-	vector<T> getPath(const T &origin, const T &dest) const;
-	void print() const;
+	std::list<Vertex<T>*> getPath(const T &origin, const T &dest);
+	void print() const; //TEMP DEBUG
 };
 
 template <class T>
@@ -116,7 +116,7 @@ int Graph<T>::getNumVertex() const {
 }
 
 template <class T>
-vector<Vertex<T> *> Graph<T>::getVertexSet() const {
+std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 	return vertexSet;
 }
 
@@ -207,11 +207,24 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
 }
 
 template<class T>
-vector<T> Graph<T>::getPath(const T &origin, const T &dest) const{
-	vector<T> res;
-	// TODO
+std::list<Vertex<T>*> Graph<T>::getPath(const T &origin, const T &dest){
+	std::list<Vertex<T>*> res;
+	this->dijkstraShortestPath(origin);
+	Vertex<T> *originVertex = findVertex(origin);
+	Vertex<T> *tempVertex = findVertex(dest);
+	while (tempVertex != NULL && tempVertex != originVertex){
+		res.push_front(tempVertex);
+		tempVertex = tempVertex->getPath();
+	}
+	if (tempVertex == NULL)
+		res.clear();
+	else res.push_front(tempVertex);
+
 	return res;
 }
+
+
+
 
 template<class T>
 void Graph<T>::print() const{

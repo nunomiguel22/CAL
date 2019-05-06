@@ -1,5 +1,7 @@
 #include "Graph.h"
 #include <string>
+#include <list>
+#include <stdio.h>
 
 
 int main(){
@@ -46,6 +48,16 @@ int main(){
     testGraph.dijkstraShortestPath("A");
 
     testGraph.print();
+    std::string origin = "C";
+    std::string destination = "D";
+
+    std::list<Vertex<std::string>*> path = testGraph.getPath(origin, destination);
+    printf("\nPath from %s to %s:\n", origin.c_str(), destination.c_str());
+    int counter = 0;
+    for (Vertex<std::string> *vertex : path){
+        printf("Node %d: %s\n", counter, vertex->getInfo().c_str());
+        ++counter;
+    }
 
     return 0;
 }
