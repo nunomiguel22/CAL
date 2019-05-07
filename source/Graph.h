@@ -37,7 +37,8 @@ public:
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 	T getInfo() const;
 	double getDist() const;
-	Vertex *getPath() const;
+	Vertex* getPath() const;
+	Vertex* getNearestVertex() const;
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
 };
@@ -52,7 +53,7 @@ Vertex<T>::Vertex(T in): info(in) {}
  */
 template <class T>
 void Vertex<T>::addEdge(Vertex<T> *d, double w) {
-	adj.push_back(Edge<T>(this, d, w));
+	adj.push_back(Edge<T>(d, w));
 }
 
 template <class T>
@@ -75,21 +76,35 @@ Vertex<T> *Vertex<T>::getPath() const {
 	return this->path;
 }
 
+template <class T>
+Vertex<T> *Vertex<T>::getNearestVertex() const {
+	if (adj.size() == 0)
+		return NULL;
+	double adjDist = INF;
+	Vertex<T> *nearest;
+	for (Edge<T> edge : adj){
+		if (edge.weight < adjDist){
+			nearest = edge.dest;
+			adjDist = edge.weight;
+		}
+	}
+	return nearest;
+}
+
 /********************** Edge  ****************************/
 
 template <class T>
 class Edge {
-	Vertex<T> *origin;
 	Vertex<T> *dest;      // destination vertex
 	double weight;         // edge weight
 public:
-	Edge(Vertex<T> *origin, Vertex<T> *dest, double w);
+	Edge(Vertex<T> *dest, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
 };
 
 template <class T>
-Edge<T>::Edge(Vertex<T>*o, Vertex<T> *d, double w): origin(o), dest(d), weight(w) {}
+Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
 
 
 /*************************** Graph  **************************/

@@ -59,5 +59,11 @@ int main(){
         ++counter;
     }
 
+
+    Vertex<std::string> *test = testGraph.findVertex("E");
+    Vertex<std::string> *closest = test->getNearestVertex();
+    printf("\n\nClosest Vertex:%s\n", closest->getInfo().c_str());
+
+
     return 0;
 }
