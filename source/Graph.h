@@ -4,6 +4,7 @@
 #ifndef GRAPH_H_
 #define GRAPH_H_
 
+#include <iostream>
 #include <vector>
 #include <queue>
 #include <list>
@@ -22,7 +23,7 @@ template <class T> class Vertex;
 template <class T>
 class Vertex {
 	T info;                // contents
-	vector<Edge<T> > adj;  // outgoing edges
+	std::vector<Edge<T> > adj;  // outgoing edges
 	bool visited;          // auxiliary field
 	double dist = 0;
 	Vertex<T> *path = NULL;
@@ -36,7 +37,8 @@ public:
 	bool operator<(Vertex<T> & vertex) const; // // required by MutablePriorityQueue
 	T getInfo() const;
 	double getDist() const;
-	Vertex *getPath() const;
+	Vertex* getPath() const;
+	Vertex* getNearestVertex() const;
 	friend class Graph<T>;
 	friend class MutablePriorityQueue<Vertex<T>>;
 };
@@ -74,14 +76,29 @@ Vertex<T> *Vertex<T>::getPath() const {
 	return this->path;
 }
 
+template <class T>
+Vertex<T> *Vertex<T>::getNearestVertex() const {
+	if (adj.size() == 0)
+		return NULL;
+	double adjDist = INF;
+	Vertex<T> *nearest;
+	for (Edge<T> edge : adj){
+		if (edge.weight < adjDist){
+			nearest = edge.dest;
+			adjDist = edge.weight;
+		}
+	}
+	return nearest;
+}
+
 /********************** Edge  ****************************/
 
 template <class T>
 class Edge {
-	Vertex<T> * dest;      // destination vertex
+	Vertex<T> *dest;      // destination vertex
 	double weight;         // edge weight
 public:
-	Edge(Vertex<T> *d, double w);
+	Edge(Vertex<T> *dest, double w);
 	friend class Graph<T>;
 	friend class Vertex<T>;
 };
@@ -94,26 +111,18 @@ Edge<T>::Edge(Vertex<T> *d, double w): dest(d), weight(w) {}
 
 template <class T>
 class Graph {
-	vector<Vertex<T> *> vertexSet;    // vertex set
+	std::vector<Vertex<T> *> vertexSet;    // vertex set
 
 public:
 	Vertex<T> *findVertex(const T &in) const;
 	bool addVertex(const T &in);
 	bool addEdge(const T &sourc, const T &dest, double w);
 	int getNumVertex() const;
-	vector<Vertex<T> *> getVertexSet() const;
+	std::vector<Vertex<T> *> getVertexSet() const;
 
-	// Fp05 - single source
 	void dijkstraShortestPath(const T &s);
-	void dijkstraShortestPathOld(const T &s);
-	void unweightedShortestPath(const T &s);
-	void bellmanFordShortestPath(const T &s);
-	vector<T> getPath(const T &origin, const T &dest) const;
-
-	// Fp05 - all pairs
-	void floydWarshallShortestPath();
-	vector<T> getfloydWarshallPath(const T &origin, const T &dest) const;
-
+	std::list<Vertex<T>*> getPath(const T &origin, const T &dest);
+	void print() const; //TEMP DEBUG
 };
 
 template <class T>
@@ -122,7 +131,7 @@ int Graph<T>::getNumVertex() const {
 }
 
 template <class T>
-vector<Vertex<T> *> Graph<T>::getVertexSet() const {
+std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
 	return vertexSet;
 }
 
@@ -169,14 +178,79 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
 
 template<class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
-	// TODO
+	MutablePriorityQueue <Vertex<T>> vertexQueue;
+	/**
+	 * set every vertex distance to infinity
+	 */
+	for (Vertex<T> *vertex : vertexSet)
+		vertex->dist = INF;
+	/**
+	 * initiate origin vertex and set all others to infinite distance
+	 * add origin vertex as the start point of the vertex queue
+	 */
+	Vertex<T> *originVertex = findVertex(origin);
+	originVertex->dist = 0;
+	originVertex->path = originVertex;
+	vertexQueue.insert(originVertex);
+	/**
+	 * check every path until the queue is empty 
+	 */
+	while(!vertexQueue.empty()){
+		Vertex<T> *minVertex = vertexQueue.extractMin();
+
+		for (Edge<T> adjacentEdge: minVertex->adj){
+			Vertex<T> *adjacentVertex = adjacentEdge.dest;
+			double currentPathDistance = minVertex->dist + adjacentEdge.weight;
+			double adjacentVertexDistance = adjacentVertex->dist;
+			/**
+			 * update adjacent vertex if the current path has less distance than the previous paths
+			 */ 
+			if (adjacentVertexDistance > currentPathDistance){
+				adjacentVertex->dist = currentPathDistance;
+				adjacentVertex->path = minVertex;
+				/**
+				 * if the adjacent vertex distance is infinity add to queue
+				 * else update the adjacent vertex position in queue to match the new distance
+				 */ 
+
+				if (adjacentVertexDistance == INF) 
+					vertexQueue.insert(adjacentVertex); 
+				else vertexQueue.decreaseKey(adjacentVertex);
+			}
+		}
+	}
 }
 
 template<class T>
-vector<T> Graph<T>::getPath(const T &origin, const T &dest) const{
-	vector<T> res;
-	// TODO
+std::list<Vertex<T>*> Graph<T>::getPath(const T &origin, const T &dest){
+	std::list<Vertex<T>*> res;
+	this->dijkstraShortestPath(origin);
+	Vertex<T> *originVertex = findVertex(origin);
+	Vertex<T> *tempVertex = findVertex(dest);
+	while (tempVertex != NULL && tempVertex != originVertex){
+		res.push_front(tempVertex);
+		tempVertex = tempVertex->getPath();
+	}
+	if (tempVertex == NULL)
+		res.clear();
+	else res.push_front(tempVertex);
+
 	return res;
+}
+
+
+
+
+template<class T>
+void Graph<T>::print() const{
+	std::cout << "Node   Weight   Parent\n";
+
+	for (Vertex<T> *vertex : vertexSet){
+		std::string parent = "NULL";
+		if (vertex->path != NULL)
+			parent = vertex->path->info;
+		std::cout << vertex->info << "         " << vertex->dist << "         " << parent << std::endl;
+	}
 }
 
 #endif /* GRAPH_H_ */
