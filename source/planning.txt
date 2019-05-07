@@ -19,7 +19,7 @@ Grafo:
     Classe das arestas -DONE
     Criar Algoritmo de Dijkstra, guardando o caminho -DONE
     Output do resultado -DONE
-    Retornar vertice adjancente com menos peso
+    Retornar vertice adjancente com menos peso -DONE
 
 Rota(Parte final):
     Algoritmo para criar rotas usando o grafo do mapa
