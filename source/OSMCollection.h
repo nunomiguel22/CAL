@@ -6,20 +6,19 @@
 #include <map>
 #include <vector>
 
-#include "OSMNode.h"
 #include "Graph.h"
+#include "OSMNode.h"
 
-//Assuming that X Y coordinates will give distance in km
-#define AVERAGE_SPEED 50
+// Assuming that X Y coordinates will give distance in km
+#define AVERAGE_SPEED 50 / 60
 
 typedef double hour;
 
 class OSMCollection {
-
  public:
   void addNode(OSMNode node);
   std::map<idNode, OSMNode> getNodeMap();
-  void setEdges(std::vector<std::pair<idNode,idNode>> edges);
+  void setEdges(std::vector<std::pair<idNode, idNode>> edges);
   std::vector<std::pair<idNode, idNode>> getEdgesVector();
   void generateGraph(Graph<idNode> &graph);
   hour getEdgesTravelTime(idNode from, idNode to);
@@ -29,4 +28,4 @@ class OSMCollection {
   std::vector<std::pair<idNode, idNode>> OSMEdges;
 };
 
-#endif //INTERFACE__OSMNODESCOLLECTION_H_
+#endif  // INTERFACE__OSMNODESCOLLECTION_H_

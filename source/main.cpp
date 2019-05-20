@@ -20,7 +20,7 @@ int main() {
   for (Vertex<idNode>* vertex : result) {
     travelTime += vertex->getDist();
     cout << vertex->getInfo() << ":"
-         << "        " << travelTime * 60 << endl;
+         << "        " << travelTime << endl;
   }
 
   return 0;

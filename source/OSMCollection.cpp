@@ -51,5 +51,5 @@ hour OSMCollection::getEdgesTravelTime(idNode from, idNode to) {
 
   // double distance = sqrt(pow(xDistance, 2.0) + pow(yDistance, 2.0));
 
-  return (distance / AVERAGE_SPEED);
+  return (distance * AVERAGE_SPEED);
 }
