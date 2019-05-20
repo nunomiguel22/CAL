@@ -1,11 +1,11 @@
 #ifndef INTERFACE_UTILS_FILEMANAGER_H_
 #define INTERFACE_UTILS_FILEMANAGER_H_
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <vector>
 
-#define BASE_DIR "./T01"
+#define BASE_DIR "T01/"
 #define BASE_DIR_CLION "./../source/T01/"
 
 #define EDGES_FILE "T01_edges_"
@@ -27,7 +27,6 @@ class FileManager {
   std::vector<std::string> getVectorFileLines();
   void printFile();
   void closeFileStream();
-
 };
 
-#endif //INTERFACE_UTILS_FILEMANAGER_H_
+#endif  // INTERFACE_UTILS_FILEMANAGER_H_
