@@ -119,6 +119,7 @@ public:
 	bool addEdge(const T &sourc, const T &dest, double w);
 	int getNumVertex() const;
 	std::vector<Vertex<T> *> getVertexSet() const;
+	bool removeEmptyVertexes();
 
 	void dijkstraShortestPath(const T &s);
 	std::list<Vertex<T>*> getPath(const T &origin, const T &dest);

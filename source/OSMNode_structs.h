@@ -14,7 +14,8 @@ typedef struct {
 typedef struct {
   idNode id;
   Position pos;
-  std::string type;
+  std::string tag;
+  std::string name;
 } Node;
 
 #endif //INTERFACE__OSMNODE_STRUCTS_H_

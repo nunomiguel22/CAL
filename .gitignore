@@ -12,4 +12,8 @@
 .Trashes
 .VolumeIcon.icns
 .com.apple.timemachine.donotpresent
-    
+
+#CLion
+.idea
+CMakeLists.txt
+cmake-build-debug

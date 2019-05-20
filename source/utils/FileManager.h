@@ -6,7 +6,7 @@
 #include <vector>
 
 #define BASE_DIR "./T01"
-#define BASE_DIR_CLION "./../T01/"
+#define BASE_DIR_CLION "./../source/T01/"
 
 #define EDGES_FILE "T01_edges_"
 #define LAT_LON_FILE "T01_lat_lon_"
