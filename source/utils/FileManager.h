@@ -9,7 +9,7 @@
 #define BASE_DIR_CLION "./../source/T01/"
 
 #define EDGES_FILE "T01_edges_"
-#define LAT_LON_FILE "T01_lat_lon_"
+#define LAT_LON_FILE "T01_nodes_lat_lon_"
 #define NODES_X_Y_FILE "T01_nodes_X_Y_"
 #define TAGS_FILE "T01_tags_"
 #define FILE_EXT ".txt"

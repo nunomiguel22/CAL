@@ -1,18 +1,27 @@
 
 
-#include "OSMExtractor.h"
 #include "Graph.h"
+#include "OSMExtractor.h"
 
 using namespace std;
 
-int main(){
-
-  Graph<idNode > graph;
+int main() {
+  Graph<idNode> graph;
 
   OSMExtractor osm_extractor;
   OSMCollection OSMCol = osm_extractor.extractOSMCollectionByCity("Porto");
 
   OSMCol.generateGraph(graph);
 
-    return 0;
+  list<Vertex<idNode>*> result = graph.getPath(1296455226, 111447975);
+
+  cout << "Vertex     -     Time Traveled" << endl;
+  double travelTime = 0;
+  for (Vertex<idNode>* vertex : result) {
+    travelTime += vertex->getDist();
+    cout << vertex->getInfo() << ":"
+         << "        " << travelTime * 60 << endl;
+  }
+
+  return 0;
 }

@@ -4,11 +4,11 @@
 #include <string>
 
 typedef unsigned long long int idNode;
-typedef long double coordinate;
+typedef double coordinate;
 
 typedef struct {
-  coordinate posX;
-  coordinate posY;
+  coordinate posLat;
+  coordinate posLon;
 } Position;
 
 typedef struct {
@@ -18,4 +18,4 @@ typedef struct {
   std::string name;
 } Node;
 
-#endif //INTERFACE__OSMNODE_STRUCTS_H_
+#endif  // INTERFACE__OSMNODE_STRUCTS_H_

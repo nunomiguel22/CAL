@@ -13,8 +13,8 @@ OSMCollection OSMExtractor::extractOSMCollectionByCity(
   for (auto& it : nodesPosition) {
     osmCol.addNode(OSMNode::builder{}
                        .addNodeId(it.first)
-                       .addXcoord(it.second.posX)
-                       .addYcoord(it.second.posY)
+                       .addXcoord(it.second.posLat)
+                       .addYcoord(it.second.posLon)
                        .build());
   }
 
@@ -26,7 +26,7 @@ OSMCollection OSMExtractor::extractOSMCollectionByCity(
 map<idNode, Position> OSMExtractor::getNodesXYPosition(
     const std::string& city) {
   map<idNode, Position> nodesPositionMap;
-  string file = BASE_DIR + city + "/" + NODES_X_Y_FILE + city + FILE_EXT;
+  string file = BASE_DIR + city + "/" + LAT_LON_FILE + city + FILE_EXT;
   FileManager nodes(file);
   auto nodesXY = nodes.getVectorFileLines();
   // TODO: use the first line to check if the number of edges is correct
@@ -38,8 +38,8 @@ map<idNode, Position> OSMExtractor::getNodesXYPosition(
     vector<string> nodeAndPosition = nodes.explode(',', node);
     idNode id = stoi(nodeAndPosition[0]);
     Position pos;
-    pos.posX = stod(nodeAndPosition[1]);
-    pos.posY = stod(nodeAndPosition[2]);
+    pos.posLat = stod(nodeAndPosition[1]);
+    pos.posLon = stod(nodeAndPosition[2]);
 
     nodesPositionMap.insert(std::pair<idNode, Position>(id, pos));
   }
