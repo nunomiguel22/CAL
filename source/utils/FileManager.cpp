@@ -4,8 +4,6 @@ using namespace std;
 
 // TODO: handle exception in case the file does not open properly
 FileManager::FileManager(const std::string& file) {
-  //  FileManager::file.open(BASE_DIR_CLION + city + "/" + file + city +
-  //  FILE_EXT);
   FileManager::file.open(file);
   this->convFileToVector();
 }

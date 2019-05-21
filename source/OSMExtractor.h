@@ -1,5 +1,5 @@
-#ifndef INTERFACE__OSMEXTRACTOR_H_
-#define INTERFACE__OSMEXTRACTOR_H_
+#ifndef __OSMEXTRACTOR_H_
+#define __OSMEXTRACTOR_H_
 
 #include <map>
 #include "OSMCollection.h"
@@ -15,4 +15,4 @@ class OSMExtractor {
   std::vector<std::pair<idNode, idNode>> getEdges(const std::string& city);
 };
 
-#endif //INTERFACE__OSMEXTRACTOR_H_
+#endif //__OSMEXTRACTOR_H_

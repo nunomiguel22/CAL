@@ -1,5 +1,5 @@
-#ifndef INTERFACE__OSMNODE_STRUCTS_H_
-#define INTERFACE__OSMNODE_STRUCTS_H_
+#ifndef __OSMNODE_STRUCTS_H_
+#define __OSMNODE_STRUCTS_H_
 
 #include <string>
 
@@ -18,4 +18,4 @@ typedef struct {
   std::string name;
 } Node;
 
-#endif  // INTERFACE__OSMNODE_STRUCTS_H_
+#endif  // __OSMNODE_STRUCTS_H_

@@ -11,6 +11,7 @@
 #include <limits>
 #include <cmath>
 #include "MutablePriorityQueue.h"
+#include "OSMCollection.h"
 
 template <class T> class Edge;
 template <class T> class Graph;
@@ -115,13 +116,16 @@ class Graph {
 
 public:
 	Vertex<T> *findVertex(const T &in) const;
+	void generateGraph(OSMCollection &osmCollection);
 	bool addVertex(const T &in);
 	bool addEdge(const T &sourc, const T &dest, double w);
 	int getNumVertex() const;
 	std::vector<Vertex<T> *> getVertexSet() const;
 	bool removeEmptyVertexes();
 
+
 	void dijkstraShortestPath(const T &s);
+  void djisktraWithObjective(const OSMCollection &nodeCollection, const T &s);
 	std::list<Vertex<T>*> getPath(const T &origin, const T &dest);
 	void print() const; //TEMP DEBUG
 };
@@ -252,6 +256,69 @@ void Graph<T>::print() const{
 			parent = vertex->path->info;
 		std::cout << vertex->info << "         " << vertex->dist << "         " << parent << std::endl;
 	}
+}
+
+
+/**
+ * Djisktra only from origin to destination
+ */
+
+template<class T>
+void Graph<T>::djisktraWithObjective(const OSMCollection &nodeCollection, const T &origin) {
+  MutablePriorityQueue <Vertex<T>> vertexQueue;
+  /**
+   * set every vertex distance to infinity
+   */
+  for (Vertex<T> *vertex : vertexSet)
+    vertex->dist = INF;
+  /**
+   * initiate origin vertex and set all others to infinite distance
+   * add origin vertex as the start point of the vertex queue
+   */
+  Vertex<T> *originVertex = findVertex(origin);
+  originVertex->dist = 0;
+  originVertex->path = originVertex;
+  vertexQueue.insert(originVertex);
+  /**
+   * check every path until the queue is empty
+   */
+  while(!vertexQueue.empty()){
+    Vertex<T> *minVertex = vertexQueue.extractMin();
+
+    for (Edge<T> adjacentEdge: minVertex->adj){
+      Vertex<T> *adjacentVertex = adjacentEdge.dest;
+      double currentPathDistance = minVertex->dist + adjacentEdge.weight;
+      double adjacentVertexDistance = adjacentVertex->dist;
+      /**
+       * update adjacent vertex if the current path has less distance than the previous paths
+       */
+      if (adjacentVertexDistance > currentPathDistance){
+        adjacentVertex->dist = currentPathDistance;
+        adjacentVertex->path = minVertex;
+        /**
+         * if the adjacent vertex distance is infinity add to queue
+         * else update the adjacent vertex position in queue to match the new distance
+         */
+
+        if (adjacentVertexDistance == INF)
+          vertexQueue.insert(adjacentVertex);
+        else vertexQueue.decreaseKey(adjacentVertex);
+      }
+    }
+  }
+}
+
+template<class T>
+void Graph<T>::generateGraph(OSMCollection &osmCollection) {
+
+  for (auto &it : osmCollection.getNodeMap()) {
+    this->addVertex(it.first);
+  }
+
+  for (auto &it : osmCollection.getEdgesVector()) {
+    hour travelTime = osmCollection.getEdgesTravelTime(it.first, it.second);
+    this->addEdge(it.first, it.second, travelTime);
+  }
 }
 
 #endif /* GRAPH_H_ */

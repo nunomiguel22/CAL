@@ -1,7 +1,3 @@
-#include <utility>
-
-#include <utility>
-
 #include "OSMNode.h"
 
 OSMNode::OSMNode(idNode id, Node node) {
@@ -12,6 +8,15 @@ OSMNode::OSMNode(idNode id, Node node) {
 idNode OSMNode::getOSMNodeId() { return this->nodeId; }
 
 Node OSMNode::getNodeStruct() { return this->node; }
+
+std::vector<User> OSMNode::getUsers() {
+
+  return this->users;
+}
+void OSMNode::addUser(User user) {
+
+ this->users.push_back(user);
+}
 
 OSMNode::builder& OSMNode::builder::addNodeId(idNode nodeID) {
   this->idBuilder = nodeID;

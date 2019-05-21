@@ -1,4 +1,5 @@
-
+//#include "Graph.h"
+//#include "OSMExtractor.h"
 
 #include "Graph.h"
 #include "OSMExtractor.h"
@@ -11,7 +12,8 @@ int main() {
   OSMExtractor osm_extractor;
   OSMCollection OSMCol = osm_extractor.extractOSMCollectionByCity("Porto");
 
-  OSMCol.generateGraph(graph);
+  graph.generateGraph(OSMCol);
+
 
   list<Vertex<idNode>*> result = graph.getPath(1296455226, 111447975);
 

@@ -1,7 +1,9 @@
-#ifndef INTERFACE__OSMNODE_H_
-#define INTERFACE__OSMNODE_H_
+#ifndef __OSMNODE_H_
+#define __OSMNODE_H_
 
+#include <vector>
 #include "OSMNode_structs.h"
+#include "User.h"
 
 class OSMNode {
 
@@ -10,10 +12,13 @@ class OSMNode {
   explicit OSMNode(idNode id, Node node);
   idNode getOSMNodeId();
   Node getNodeStruct();
+  void addUser(User user);
+  std::vector<User> getUsers();
 
  private:
   idNode nodeId;
   Node node;
+  std::vector<User> users;
 };
 
 class OSMNode::builder {
@@ -35,4 +40,4 @@ class OSMNode::builder {
 };
 
 
-#endif //INTERFACE__OSMNODE_H_
+#endif //__OSMNODE_H_
