@@ -1,8 +1,9 @@
-#include "OSMExtractor.h"
+#include "OSMServices.h"
+#include "Graph.h"
 
 using namespace std;
 
-OSMCollection OSMExtractor::extractOSMCollectionByCity(
+OSMCollection OSMServices::extractOSMCollectionByCity(
     const std::string& city) {
   OSMCollection osmCol;
   map<idNode, Position> nodesPosition = this->getNodesXYPosition(city);
@@ -21,7 +22,7 @@ OSMCollection OSMExtractor::extractOSMCollectionByCity(
   return osmCol;
 }
 
-map<idNode, Position> OSMExtractor::getNodesXYPosition(
+map<idNode, Position> OSMServices::getNodesXYPosition(
     const std::string& city) {
   map<idNode, Position> nodesPositionMap;
   string file = BASE_DIR_CLION + city + "/" + LAT_LON_FILE + city + FILE_EXT;
@@ -45,7 +46,7 @@ map<idNode, Position> OSMExtractor::getNodesXYPosition(
   return nodesPositionMap;
 }
 
-vector<pair<idNode, idNode>> OSMExtractor::getEdges(const std::string& city) {
+vector<pair<idNode, idNode>> OSMServices::getEdges(const std::string& city) {
   vector<pair<idNode, idNode>> edgesPairs;
   string file = BASE_DIR_CLION + city + "/" + EDGES_FILE + city + FILE_EXT;
   FileManager edges(file);
@@ -66,3 +67,16 @@ vector<pair<idNode, idNode>> OSMExtractor::getEdges(const std::string& city) {
 
   return edgesPairs;
 }
+
+void OSMServices::generateGraph(Graph<idNode>& graph, OSMCollection &osmCollection) {
+
+  for (auto &it : osmCollection.getNodeMap()) {
+    graph.addVertex(it.first);
+  }
+
+  for (auto &it : osmCollection.getEdgesVector()) {
+    hour travelTime = osmCollection.getEdgesTravelTime(it.first, it.second);
+    graph.addEdge(it.first, it.second, travelTime);
+  }
+}
+

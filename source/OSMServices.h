@@ -4,11 +4,13 @@
 #include <map>
 #include "OSMCollection.h"
 #include "utils/FileManager.h"
+#include "Graph.h"
 
-class OSMExtractor {
+class OSMServices {
 
  public:
   OSMCollection extractOSMCollectionByCity(const std::string &city);
+  void generateGraph(Graph<idNode> &graph, OSMCollection &osmCollection);
 
  private:
   std::map<idNode, Position> getNodesXYPosition(const std::string& city);

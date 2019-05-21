@@ -1,19 +1,14 @@
-//#include "Graph.h"
-//#include "OSMExtractor.h"
-
 #include "Graph.h"
-#include "OSMExtractor.h"
+#include "OSMServices.h"
 
 using namespace std;
 
 int main() {
   Graph<idNode> graph;
 
-  OSMExtractor osm_extractor;
-  OSMCollection OSMCol = osm_extractor.extractOSMCollectionByCity("Porto");
-
-  graph.generateGraph(OSMCol);
-
+  OSMServices osmServices;
+  OSMCollection OSMCol = osmServices.extractOSMCollectionByCity("Porto");
+  osmServices.generateGraph(graph, OSMCol);
 
   list<Vertex<idNode>*> result = graph.getPath(1296455226, 111447975);
 

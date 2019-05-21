@@ -116,7 +116,6 @@ class Graph {
 
 public:
 	Vertex<T> *findVertex(const T &in) const;
-	void generateGraph(OSMCollection &osmCollection);
 	bool addVertex(const T &in);
 	bool addEdge(const T &sourc, const T &dest, double w);
 	int getNumVertex() const;
@@ -308,17 +307,5 @@ void Graph<T>::djisktraWithObjective(const OSMCollection &nodeCollection, const 
   }
 }
 
-template<class T>
-void Graph<T>::generateGraph(OSMCollection &osmCollection) {
-
-  for (auto &it : osmCollection.getNodeMap()) {
-    this->addVertex(it.first);
-  }
-
-  for (auto &it : osmCollection.getEdgesVector()) {
-    hour travelTime = osmCollection.getEdgesTravelTime(it.first, it.second);
-    this->addEdge(it.first, it.second, travelTime);
-  }
-}
 
 #endif /* GRAPH_H_ */
