@@ -23,6 +23,7 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
   res.push_back(graph.findVertex(driver.startNode));
   list<Vertex<idNode> *>::iterator resIt;
   travelTimeTotal = 0;
+  int numberOfPassangers = 0;
 
   for (resIt = res.begin(); resIt != res.end(); ++resIt) {
     Vertex<idNode> *currentNode = *resIt;
@@ -34,7 +35,7 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
     User *bestUser = NULL;
     for (User &user : users) {
       if (user.state == U_ARRIVED) continue;
-      if (user.state == U_WAITING) {
+      if (user.state == U_WAITING && numberOfPassangers < driver.carSize) {
         double userWeight = graph.findVertex(user.startNode)->getDist();
         if (userWeight < bestWeight) {
           bestWeight = userWeight;
@@ -64,9 +65,11 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
       if (bestUser->state == U_WAITING) {
         bestUser->state = U_TRAVEL;
         userPath = graph.getPath(currentNodeinfo, bestUser->startNode);
+        ++numberOfPassangers;
       } else if (bestUser->state == U_TRAVEL) {
         bestUser->state = U_ARRIVED;
         userPath = graph.getPath(currentNodeinfo, bestUser->endNode);
+        --numberOfPassangers;
       }
 
       travelTimeTotal += userPath.back()->getDist();

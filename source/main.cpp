@@ -39,7 +39,20 @@ int main() {
 
   std::cout << "Vertex" << endl;
   for (Vertex<idNode> *vertex : result) {
-    std::cout << vertex->getInfo() << endl;
+    std::cout << vertex->getInfo();
+    if (vertex->getInfo() == driver.startNode) std::cout << " - driver start";
+    if (vertex->getInfo() == driver.endNode)
+      std::cout << " - driver destination";
+
+    for (User &user : users) {
+      if (vertex->getInfo() == user.startNode) {
+        std::cout << " - user " << user.id << " pickup";
+      }
+      if (vertex->getInfo() == user.endNode) {
+        std::cout << " - user " << user.id << " destination";
+      }
+    }
+    std::cout << std::endl;
   }
 
   std::cout << "Time: " << tripTime << std::endl;
