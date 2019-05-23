@@ -1,5 +1,7 @@
+#vscode
 .vscode/*
 *.exe
+temp/*
 
 #MacOS
 .DS_Store

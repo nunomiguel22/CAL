@@ -3,8 +3,7 @@
 
 using namespace std;
 
-OSMCollection OSMServices::extractOSMCollectionByCity(
-    const std::string& city) {
+OSMCollection OSMServices::extractOSMCollectionByCity(const std::string& city) {
   OSMCollection osmCol;
   map<idNode, Position> nodesPosition = this->getNodesXYPosition(city);
 
@@ -22,10 +21,9 @@ OSMCollection OSMServices::extractOSMCollectionByCity(
   return osmCol;
 }
 
-map<idNode, Position> OSMServices::getNodesXYPosition(
-    const std::string& city) {
+map<idNode, Position> OSMServices::getNodesXYPosition(const std::string& city) {
   map<idNode, Position> nodesPositionMap;
-  string file = BASE_DIR_CLION + city + "/" + LAT_LON_FILE + city + FILE_EXT;
+  string file = BASE_DIR + city + "/" + LAT_LON_FILE + city + FILE_EXT;
   FileManager nodes(file);
   auto nodesXY = nodes.getVectorFileLines();
   // TODO: use the first line to check if the number of edges is correct
@@ -48,7 +46,7 @@ map<idNode, Position> OSMServices::getNodesXYPosition(
 
 vector<pair<idNode, idNode>> OSMServices::getEdges(const std::string& city) {
   vector<pair<idNode, idNode>> edgesPairs;
-  string file = BASE_DIR_CLION + city + "/" + EDGES_FILE + city + FILE_EXT;
+  string file = BASE_DIR + city + "/" + EDGES_FILE + city + FILE_EXT;
   FileManager edges(file);
   auto edgesInOut = edges.getVectorFileLines();
   // TODO: use the first line to check if the number of edges is correct
@@ -68,15 +66,14 @@ vector<pair<idNode, idNode>> OSMServices::getEdges(const std::string& city) {
   return edgesPairs;
 }
 
-void OSMServices::generateGraph(Graph<idNode>& graph, OSMCollection &osmCollection) {
-
-  for (auto &it : osmCollection.getNodeMap()) {
+void OSMServices::generateGraph(Graph<idNode>& graph,
+                                OSMCollection& osmCollection) {
+  for (auto& it : osmCollection.getNodeMap()) {
     graph.addVertex(it.first);
   }
 
-  for (auto &it : osmCollection.getEdgesVector()) {
+  for (auto& it : osmCollection.getEdgesVector()) {
     hour travelTime = osmCollection.getEdgesTravelTime(it.first, it.second);
     graph.addEdge(it.first, it.second, travelTime);
   }
 }
-

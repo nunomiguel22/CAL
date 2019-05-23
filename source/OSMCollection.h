@@ -3,26 +3,26 @@
 #ifndef __OSMCOLLECTION_H_
 #define __OSMCOLLECTION_H_
 
+#include <math.h>
 #include <map>
 #include <vector>
-#include <math.h>
 #include "OSMNode.h"
 
 #define MATH_PI 3.14159265358979323846
 
 // Assuming that X Y coordinates will give distance in km
-#define AVERAGE_SPEED 50 / 60
+#define AVERAGE_SPEED 50
 
 typedef double hour;
 
-//TODO: Should this be a template class?
+// TODO: Should this be a template class?
 class OSMCollection {
  public:
   void addNode(OSMNode node);
   std::map<idNode, OSMNode> getNodeMap();
   void setEdges(std::vector<std::pair<idNode, idNode>> edges);
   std::vector<std::pair<idNode, idNode>> getEdgesVector();
-//  void generateGraph(Graph<idNode> &graph);
+  //  void generateGraph(Graph<idNode> &graph);
   hour getEdgesTravelTime(idNode from, idNode to);
 
  private:

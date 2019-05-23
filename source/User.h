@@ -1,6 +1,8 @@
 #ifndef __SOURCE_USER_H_
 #define __SOURCE_USER_H_
 
+#include <list>
+#include "Graph.h"
 #include "OSMNode_structs.h"
 
 typedef double hour;
@@ -14,15 +16,28 @@ typedef struct {
   hour tolerance;
 } Route;
 
-class User {
+typedef enum { U_WAITING, U_TRAVEL, U_ARRIVED } userState;
 
+class User {
  public:
+  User(idNode sNode, idNode eNode, Graph<idNode>& graph);
   class builder;
   name getUserName();
   Route getUserRoute();
   bool isDriver();
   bool isSmoker();
   int getCarCapacity();
+  idNode startNode;
+  idNode endNode;
+  hour startTime;
+  hour startTolerance;
+  hour endTime;
+  hour endTolerance;
+  std::list<Vertex<idNode>*> path;
+  double bestTravelTime;
+  userState state;
+  int carSize;
+  int id;
 
  private:
   name userName;
@@ -33,7 +48,6 @@ class User {
 };
 
 class User::builder {
-
  public:
   builder& setName(name name);
   builder& addStartPoint(idNode sPoint);
@@ -51,4 +65,4 @@ class User::builder {
   hour tolBuilder = 0.0;
 };
 
-#endif // __SOURCE_USER_H_
+#endif  // __SOURCE_USER_H_
