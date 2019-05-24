@@ -10,12 +10,12 @@ std::vector<User *> getPotentialPassangers(Graph<idNode> &graph,
 std::list<Vertex<idNode> *> rideshareFast(Graph<idNode> &graph,
                                           std::vector<User *> &users,
                                           User &driver, double &travelTime,
-                                          std::vector<User *> &passangers);
+                                          std::vector<User *> &passengers);
 
 std::list<Vertex<idNode> *> rideshareBest(Graph<idNode> &graph,
                                           std::vector<User *> &users,
                                           User &driver, double &travelTime,
-                                          std::vector<User *> &passangers);
+                                          std::vector<User *> &passengers);
 
 std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
                                       std::vector<User *> &users, User &driver,

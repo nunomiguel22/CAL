@@ -5,10 +5,10 @@ bool operator<(const Vertex<idNode> &a, const Vertex<idNode> &b) {
   return (a.getDist() < b.getDist()) ? true : false;
 }
 
-std::vector<User *> getPotentialPassangers(Graph<idNode> &graph,
+std::vector<User *> getPotentialPassengers(Graph<idNode> &graph,
                                            std::vector<User *> &users,
                                            User &driver) {
-  std::vector<User *> potentialPassangers;
+  std::vector<User *> potentialPassengers;
 
   for (User *user : users) {
     /** update graph to driver start node **/
@@ -19,49 +19,49 @@ std::vector<User *> getPotentialPassangers(Graph<idNode> &graph,
     double minTimeToUserEnd = timeToUserStart + user->getTravelTime();
     double userDepartureTime = user->getRoute().departureTime.toMinutes();
 
-    /** discard passanger if there is no path available to pickup **/
+    /** discard passenger if there is no path available to pickup **/
     if (userStart->getDist() == INF) continue;
-    /** discard passanger if user can't reach pickup before his end time **/
+    /** discard passenger if user can't reach pickup before his end time **/
     if (driver.getMaxEndTime() < userDepartureTime) continue;
-    /** discard passanger if driver can't reach pickup in time **/
+    /** discard passenger if driver can't reach pickup in time **/
     if (timeToUserStart > userDepartureTime) continue;
-    /** discard passanger if passanger doesnt reach his destination in time **/
+    /** discard passenger if passenger doesnt reach his destination in time **/
     if (minTimeToUserEnd > user->getMaxEndTime()) continue;
-    /** discard passanger if driver can't reach his destination in time **/
+    /** discard passenger if driver can't reach his destination in time **/
     if (minTimeToUserEnd > driver.getMaxEndTime()) continue;
     /** check path from user destination to driver destination **/
     graph.dijkstraShortestPath(user->getRoute().endNode);
     Vertex<idNode> *driverEnd = graph.findVertex(driver.getRoute().endNode);
     double timeFromUserToDriverDest = driverEnd->getDist();
-    /** discard passanger if no path exists to driver destination **/
+    /** discard passenger if no path exists to driver destination **/
     if (timeFromUserToDriverDest == INF) continue;
-    /** discard passanger if driver can't reach destination in time**/
+    /** discard passenger if driver can't reach destination in time**/
     if (minTimeToUserEnd + timeFromUserToDriverDest > driver.getMaxEndTime())
       continue;
-    /** potential passanger **/
-    potentialPassangers.push_back(user);
+    /** potential passenger **/
+    potentialPassengers.push_back(user);
   }
-  return potentialPassangers;
+  return potentialPassengers;
 }
 
 std::list<Vertex<idNode> *> rideshareFast(Graph<idNode> &graph,
                                           std::vector<User *> &users,
                                           User &driver, double &travelTime,
-                                          std::vector<User *> &passangers) {
-  std::vector<User *> potentialPassangers =
-      getPotentialPassangers(graph, users, driver);
-  if (potentialPassangers.size() == 0) return driver.getPath();
+                                          std::vector<User *> &passengers) {
+  std::vector<User *> potentialPassengers =
+      getPotentialPassengers(graph, users, driver);
+  if (potentialPassengers.size() == 0) return driver.getPath();
 
   std::list<Vertex<idNode> *> path = driver.getPath();
   double timeToDriverDest;
-  for (User *passanger : potentialPassangers) {
+  for (User *passenger : potentialPassengers) {
     std::list<Vertex<idNode> *> userPath;
-    passangers.push_back(passanger);
-    userPath = buildPath(graph, passangers, driver, timeToDriverDest);
+    passengers.push_back(passenger);
+    userPath = buildPath(graph, passengers, driver, timeToDriverDest);
 
     if (userPath.size() == 0 ||
         timeToDriverDest + driver.getMinStartTime() > driver.getMaxEndTime())
-      passangers.pop_back();
+      passengers.pop_back();
     else {
       path = userPath;
       travelTime = timeToDriverDest;
@@ -73,43 +73,43 @@ std::list<Vertex<idNode> *> rideshareFast(Graph<idNode> &graph,
 std::list<Vertex<idNode> *> rideshareBest(Graph<idNode> &graph,
                                           std::vector<User *> &users,
                                           User &driver, double &travelTime,
-                                          std::vector<User *> &passangers) {
-  std::vector<User *> potentialPassangers =
-      getPotentialPassangers(graph, users, driver);
-  if (potentialPassangers.size() == 0) return driver.getPath();
+                                          std::vector<User *> &passengers) {
+  std::vector<User *> potentialPassengers =
+      getPotentialPassengers(graph, users, driver);
+  if (potentialPassengers.size() == 0) return driver.getPath();
 
   std::list<Vertex<idNode> *> bestPath = driver.getPath();
   unsigned int iterations = 0;
 
-  while (iterations == passangers.size()) {
+  while (iterations == passengers.size()) {
     ++iterations;
     double timeToDriverDest;
     double bestTime = INF;
     User *bestUser = NULL;
-    for (User *passanger : potentialPassangers) {
+    for (User *passenger : potentialPassengers) {
       std::list<Vertex<idNode> *> userPath;
-      passangers.push_back(passanger);
-      userPath = buildPath(graph, passangers, driver, timeToDriverDest);
+      passengers.push_back(passenger);
+      userPath = buildPath(graph, passengers, driver, timeToDriverDest);
 
       if (userPath.size() == 0 || timeToDriverDest + driver.getMinStartTime() >
                                       driver.getMaxEndTime()) {
-        potentialPassangers.erase(
-            std::remove(potentialPassangers.begin(), potentialPassangers.end(),
-                        passanger),
-            potentialPassangers.end());
+        potentialPassengers.erase(
+            std::remove(potentialPassengers.begin(), potentialPassengers.end(),
+                        passenger),
+            potentialPassengers.end());
       } else if (timeToDriverDest < bestTime) {
         bestPath = userPath;
         travelTime = timeToDriverDest;
-        bestUser = passanger;
+        bestUser = passenger;
       }
-      passangers.pop_back();
+      passengers.pop_back();
     }
     if (bestUser != NULL) {
-      passangers.push_back(bestUser);
-      potentialPassangers.erase(
-          std::remove(potentialPassangers.begin(), potentialPassangers.end(),
+      passengers.push_back(bestUser);
+      potentialPassengers.erase(
+          std::remove(potentialPassengers.begin(), potentialPassengers.end(),
                       bestUser),
-          potentialPassangers.end());
+          potentialPassengers.end());
     }
   }
   return bestPath;
@@ -131,7 +131,7 @@ std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
   res.push_back(graph.findVertex(driver.getRoute().startNode));
   std::list<Vertex<idNode> *>::iterator resIt;
   travelTimeTotal = 0;
-  int numberOfPassangers = 0;
+  int numberOfPassengers = 0;
 
   for (resIt = res.begin(); resIt != res.end(); ++resIt) {
     Vertex<idNode> *currentNode = *resIt;
@@ -144,7 +144,7 @@ std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
     for (User *user : users) {
       if (user->getState() == U_ARRIVED) continue;
       if (user->getState() == U_WAITING &&
-          numberOfPassangers < driver.getCarCapacity()) {
+          numberOfPassengers < driver.getCarCapacity()) {
         double userWeight =
             graph.findVertex(user->getRoute().startNode)->getDist();
         double userPickupTime =
@@ -190,11 +190,11 @@ std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
         bestUser->setState(U_TRAVEL);
         userPath =
             graph.getPath(currentNodeinfo, bestUser->getRoute().startNode);
-        ++numberOfPassangers;
+        ++numberOfPassengers;
       } else if (bestUser->getState() == U_TRAVEL) {
         bestUser->setState(U_ARRIVED);
         userPath = graph.getPath(currentNodeinfo, bestUser->getRoute().endNode);
-        --numberOfPassangers;
+        --numberOfPassengers;
       }
       if (userPath.size() == 0) {
         res.clear();
