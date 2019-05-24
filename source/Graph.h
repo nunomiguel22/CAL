@@ -208,6 +208,8 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
    * add origin vertex as the start point of the vertex queue
    */
   Vertex<T> *originVertex = findVertex(origin);
+  if (originVertex == NULL) return;
+
   originVertex->dist = 0;
   originVertex->path = originVertex;
   vertexQueue.insert(originVertex);
