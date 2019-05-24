@@ -68,12 +68,14 @@ int main() {
   /** ! test users debug **/
 
   /** ! test build path **/
+  std::cout << std::endl << "rideshareFast" << std::endl;
   double tripTime;
   std::vector<User *> passangers;
   std::list<Vertex<idNode> *> result =
       rideshareFast(graph, users, driver, tripTime, passangers);
   printPath(passangers, tripTime, result, driver);
 
+  std::cout << std::endl << "rideshareBest" << std::endl;
   tripTime = 0;
   passangers.clear();
   std::list<Vertex<idNode> *> result2 =
