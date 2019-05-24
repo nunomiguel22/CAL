@@ -26,6 +26,8 @@ class User {
   bool smoker;
   int carCapacity;
   int id;
+  int minStartTime;
+  int maxEndTime;
   userState state;
   std::list<Vertex<idNode>*> path;
   double travelTime;
@@ -38,13 +40,15 @@ class User {
   bool isSmoker() const;
   int getCarCapacity() const;
   int getId() const;
+  int getMinStartTime() const;
+  int getMaxEndTime() const;
   userState getState() const;
+  std::list<Vertex<idNode>*> getPath();
+  double getTravelTime() const;
+
   void setState(userState state);
   void setSmoker(bool smoker);
   void setDriver(bool driver, int capacity);
-
-  std::list<Vertex<idNode>*> getPath();
-  double getTravelTime() const;
 };
 
 #endif  // __SOURCE_USER_H_

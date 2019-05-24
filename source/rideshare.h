@@ -3,9 +3,21 @@
 #include "OSMNode.h"
 #include "User.h"
 
+std::vector<User *> getPotentialPassangers(Graph<idNode> &graph,
+                                           std::vector<User *> &users,
+                                           User &driver);
+
+std::list<Vertex<idNode> *> rideshareFast(Graph<idNode> &graph,
+                                          std::vector<User *> &users,
+                                          User &driver, double &travelTime);
+
+std::list<Vertex<idNode> *> rideshareBest(Graph<idNode> &graph,
+                                          std::vector<User *> &users,
+                                          User &driver, double &travelTime);
+
 std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
-                                      std::vector<User> &users, User &driver,
+                                      std::vector<User *> &users, User &driver,
                                       double &travelTimeTotal);
 
-void printPath(std::vector<User> &users, minutes travelTime,
+void printPath(std::vector<User *> &users, minutes travelTime,
                std::list<Vertex<idNode> *> &path, User &driver);
