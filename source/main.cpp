@@ -34,6 +34,7 @@ int main() {
   route.endNode = 473873457;
   User driver(route, "testDriver", graph);
   driver.setDriver(true, 2);
+  driver.setSmoker(true);
 
   route.tolerance = 10;
   route.departureTime.hour = 10;
