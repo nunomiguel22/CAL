@@ -4,17 +4,6 @@
 #include "User.h"
 #include "rideshare.h"
 
-/**
- * TODO: Sort users by smoker
- * TODO: Test path against all users
- * TODO: Time restrictions
- * TODO: Graphviewer display
- * TODO: Node names
- * TODO: Node search
- *
- * TODO: Report
- */
-
 int main() {
   /** generate graph of porto **/
   Graph<idNode> graph;
