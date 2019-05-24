@@ -4,13 +4,7 @@
 #include <list>
 #include "Graph.h"
 #include "OSMNode.h"
-
-typedef double hours;
-typedef double minutes;
-typedef struct timeOfDay {
-  hours hour;
-  minutes minutes;
-} timeOfDay;
+#include "timeofday.h"
 
 typedef std::string name;
 

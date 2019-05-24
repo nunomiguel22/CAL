@@ -97,3 +97,46 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
   res.insert(res.end(), ++finalPath.begin(), finalPath.end());
   return res;
 }
+
+void printPath(std::vector<User> &users, minutes travelTime,
+               std::list<Vertex<idNode> *> &path, User &driver) {
+  if (path.size() == 0) {
+    std::cout << "Path not possible" << std::endl;
+    return;
+  }
+
+  for (User &user : users) user.setState(U_WAITING);
+
+  std::cout << "Path      -  Description" << endl;
+  std::list<Vertex<idNode> *>::iterator pathIterator;
+
+  for (pathIterator = path.begin(); pathIterator != path.end();
+       ++pathIterator) {
+    Vertex<idNode> *node = *pathIterator;
+    std::cout << node->getInfo();
+
+    if (pathIterator == path.begin())
+      std::cout << " - Driver '" << driver.getName() << "' departure";
+    if (pathIterator == --path.end())
+      std::cout << " - Driver '" << driver.getName() << "' destination";
+
+    for (User &user : users) {
+      if (user.getState() == U_ARRIVED) continue;
+
+      if (node->getInfo() == user.getRoute().startNode &&
+          user.getState() == U_WAITING) {
+        std::cout << " - User '" << user.getName() << "' pickup";
+        user.setState(U_TRAVEL);
+      }
+
+      if (node->getInfo() == user.getRoute().endNode &&
+          user.getState() == U_TRAVEL) {
+        std::cout << " - User '" << user.getName() << "' destination";
+        user.setState(U_ARRIVED);
+      }
+    }
+    std::cout << std::endl;
+  }
+
+  std::cout << "Time: " << travelTime << std::endl;
+}
