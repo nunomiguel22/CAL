@@ -46,13 +46,13 @@ std::vector<User *> getPotentialPassangers(Graph<idNode> &graph,
 
 std::list<Vertex<idNode> *> rideshareFast(Graph<idNode> &graph,
                                           std::vector<User *> &users,
-                                          User &driver, double &travelTime) {
+                                          User &driver, double &travelTime,
+                                          std::vector<User *> &passangers) {
   std::vector<User *> potentialPassangers =
       getPotentialPassangers(graph, users, driver);
   if (potentialPassangers.size() == 0) return driver.getPath();
 
   std::list<Vertex<idNode> *> path = driver.getPath();
-  std::vector<User *> passangers;
   double timeToDriverDest;
   for (User *passanger : potentialPassangers) {
     std::list<Vertex<idNode> *> userPath;
@@ -72,13 +72,13 @@ std::list<Vertex<idNode> *> rideshareFast(Graph<idNode> &graph,
 
 std::list<Vertex<idNode> *> rideshareBest(Graph<idNode> &graph,
                                           std::vector<User *> &users,
-                                          User &driver, double &travelTime) {
+                                          User &driver, double &travelTime,
+                                          std::vector<User *> &passangers) {
   std::vector<User *> potentialPassangers =
       getPotentialPassangers(graph, users, driver);
   if (potentialPassangers.size() == 0) return driver.getPath();
 
   std::list<Vertex<idNode> *> bestPath = driver.getPath();
-  std::vector<User *> passangers;
   unsigned int iterations = 0;
 
   while (iterations == passangers.size()) {
