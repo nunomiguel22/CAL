@@ -1,6 +1,5 @@
 #include "rideshare.h"
 #include <algorithm>
-#include "User.h"
 
 using namespace std;
 
@@ -12,15 +11,14 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
                                  User &driver, double &travelTimeTotal) {
   list<Vertex<idNode> *> res;
   if (users.size() == 0) {
-    res = driver.path;
     return res;
   }
   /** reset user state **/
   for (User &user : users) {
-    user.state = U_WAITING;
+    user.setState(U_WAITING);
   }
 
-  res.push_back(graph.findVertex(driver.startNode));
+  res.push_back(graph.findVertex(driver.getRoute().startNode));
   list<Vertex<idNode> *>::iterator resIt;
   travelTimeTotal = 0;
   int numberOfPassangers = 0;
@@ -34,16 +32,19 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
     double bestWeight = INF;
     User *bestUser = NULL;
     for (User &user : users) {
-      if (user.state == U_ARRIVED) continue;
-      if (user.state == U_WAITING && numberOfPassangers < driver.carSize) {
-        double userWeight = graph.findVertex(user.startNode)->getDist();
+      if (user.getState() == U_ARRIVED) continue;
+      if (user.getState() == U_WAITING &&
+          numberOfPassangers < driver.getCarCapacity()) {
+        double userWeight =
+            graph.findVertex(user.getRoute().startNode)->getDist();
         if (userWeight < bestWeight) {
           bestWeight = userWeight;
           bestUser = &user;
         }
       }
-      if (user.state == U_TRAVEL) {
-        double userWeight = graph.findVertex(user.endNode)->getDist();
+      if (user.getState() == U_TRAVEL) {
+        double userWeight =
+            graph.findVertex(user.getRoute().endNode)->getDist();
         if (userWeight < bestWeight) {
           bestWeight = userWeight;
           bestUser = &user;
@@ -54,22 +55,27 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
     /** none of the users could be reached from the driver's start node **/
     if (bestUser == NULL) {
       for (User &user : users) {
-        if (user.state == U_TRAVEL) {
-          res = driver.path;
+        if (user.getState() == U_TRAVEL) {
+          res.clear();
           return res;
         }
       }
     } else {
       /** build path and update user **/
       list<Vertex<idNode> *> userPath;
-      if (bestUser->state == U_WAITING) {
-        bestUser->state = U_TRAVEL;
-        userPath = graph.getPath(currentNodeinfo, bestUser->startNode);
+      if (bestUser->getState() == U_WAITING) {
+        bestUser->setState(U_TRAVEL);
+        userPath =
+            graph.getPath(currentNodeinfo, bestUser->getRoute().startNode);
         ++numberOfPassangers;
-      } else if (bestUser->state == U_TRAVEL) {
-        bestUser->state = U_ARRIVED;
-        userPath = graph.getPath(currentNodeinfo, bestUser->endNode);
+      } else if (bestUser->getState() == U_TRAVEL) {
+        bestUser->setState(U_ARRIVED);
+        userPath = graph.getPath(currentNodeinfo, bestUser->getRoute().endNode);
         --numberOfPassangers;
+      }
+      if (userPath.size() == 0) {
+        res.clear();
+        return res;
       }
 
       travelTimeTotal += userPath.back()->getDist();
@@ -77,14 +83,12 @@ list<Vertex<idNode> *> buildPath(Graph<idNode> &graph, vector<User> &users,
       resIt = res.end();
       advance(resIt, -2);
     }
-
-    Vertex<idNode> *debugNode = *resIt;  // DEBUG
   }
 
   /** append path to final destination **/
   graph.dijkstraShortestPath(res.back()->getInfo());
   list<Vertex<idNode> *> finalPath =
-      graph.getPath(res.back()->getInfo(), driver.endNode);
+      graph.getPath(res.back()->getInfo(), driver.getRoute().endNode);
   if (finalPath.size() == 0) {
     res.clear();
     return res;

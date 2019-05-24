@@ -1,49 +1,31 @@
 #include "User.h"
 
-name User::getUserName() { return this->userName; }
+name User::getName() const { return this->userName; }
 
-Route User::getUserRoute() { return this->route; }
+Route User::getRoute() { return this->route; }
 
-bool User::isDriver() { return this->driver; }
+bool User::isDriver() const { return this->driver; }
 
-bool User::isSmoker() { return this->smoker; }
+bool User::isSmoker() const { return this->smoker; }
 
-int User::getCarCapacity() { return this->carCapacity; }
+int User::getCarCapacity() const { return this->carCapacity; }
 
-User::builder &User::builder::setName(name name) {
-  this->nameBuilder = std::move(name);
-  return *this;
+int User::getId() const { return id; }
+
+userState User::getState() const { return state; }
+
+void User::setSmoker(bool smoker) { this->smoker = smoker; }
+void User::setDriver(bool driver, int capacity) {
+  this->driver = driver;
+  carCapacity = capacity;
 }
+void User::setState(userState state) { this->state = state; }
 
-User::builder &User::builder::addStartPoint(idNode sPoint) {
-  this->sPointBuilder = sPoint;
-  return *this;
-}
-
-User::builder &User::builder::addEndPoint(idNode ePoint) {
-  this->ePointBuilder = ePoint;
-  return *this;
-}
-
-User::builder &User::builder::addDepartureTime(hour dTime) {
-  this->dTimeBuilder = dTime;
-  return *this;
-}
-
-User::builder &User::builder::addArrivalTime(hour aTime) {
-  this->aTimeBuilder = aTime;
-  return *this;
-}
-
-User::builder &User::builder::addTolerance(hour tol) {
-  this->tolBuilder = tol;
-  return *this;
-}
-
-User::User(idNode sNode, idNode eNode, Graph<idNode> &graph) {
-  startNode = sNode;
-  endNode = eNode;
-  graph.dijkstraShortestPath(sNode);
-  path = graph.getPath(sNode, eNode);
-  bestTravelTime = graph.findVertex(sNode)->getDist();
+User::User(Route route, std::string name, Graph<idNode> &graph) {
+  state = U_WAITING;
+  this->route = route;
+  this->userName = name;
+  graph.dijkstraShortestPath(this->route.startNode);
+  path = graph.getPath(this->route.startNode, this->route.endNode);
+  travelTime = graph.findVertex(this->route.startNode)->getDist();
 }

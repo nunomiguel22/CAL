@@ -7,7 +7,6 @@ OSMCollection OSMServices::extractOSMCollectionByCity(const std::string& city) {
   OSMCollection osmCol;
   map<idNode, Position> nodesPosition = this->getNodesXYPosition(city);
 
-  // TODO: add tags to nodes
   for (auto& it : nodesPosition) {
     osmCol.addNode(OSMNode::builder{}
                        .addNodeId(it.first)

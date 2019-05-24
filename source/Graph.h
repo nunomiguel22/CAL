@@ -199,7 +199,10 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
   /**
    * set every vertex distance to infinity
    */
-  for (Vertex<T> *vertex : vertexSet) vertex->dist = INF;
+  for (Vertex<T> *vertex : vertexSet) {
+    vertex->dist = INF;
+    vertex->path = NULL;
+  }
   /**
    * initiate origin vertex and set all others to infinite distance
    * add origin vertex as the start point of the vertex queue
