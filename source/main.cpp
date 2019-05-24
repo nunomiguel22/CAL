@@ -7,23 +7,11 @@
 int main() {
   /** generate graph of porto **/
   Graph<idNode> graph;
-  /*OSMServices osmServices;
+  OSMServices osmServices;
   OSMCollection OSMCol = osmServices.extractOSMCollectionByCity("Porto");
-  osmServices.generateGraph(graph, OSMCol); */
-
-  timeOfDay time1;
-  timeOfDay time2;
-  time1.hour = 6;
-  time1.minute = 8;
-  time2.hour = 5;
-  time2.minute = 8;
-  std::string testresult = (time1 < time2) ? "true" : "false";
-  std::cout << testresult << std::endl;
-
-  return 0;
+  osmServices.generateGraph(graph, OSMCol);
 
   /** ! test users debug **/
-
   std::vector<User> users;
   Route route;
   route.departureTime.hour = 10;
@@ -43,7 +31,6 @@ int main() {
   route.endNode = 349907649;
   User user1(route, "testJoao", graph);
   users.push_back(user1);
-
   /** ! test users debug **/
 
   /** ! test build path **/
