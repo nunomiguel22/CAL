@@ -60,11 +60,11 @@ int main() {
   /** ! test build path **/
   std::cout << std::endl << "rideshareFast" << std::endl;
   double tripTime;
-  std::vector<User *> passangers;
   auto started = std::chrono::high_resolution_clock::now();
+  std::vector<User *> passengers;
   std::list<Vertex<idNode> *> result =
-      rideshareFast(graph, users, driver, tripTime, passangers);
-  printPath(passangers, tripTime, result, driver);
+      rideshareFast(graph, users, driver, tripTime, passengers);
+  printPath(passengers, tripTime, result, driver);
 
   auto done = std::chrono::high_resolution_clock::now();
   std::cout << "Execution time(ms): "
@@ -75,17 +75,19 @@ int main() {
 
   std::cout << std::endl << "rideshareBest" << std::endl;
   tripTime = 0;
-  passangers.clear();
+
+  passengers.clear();
   started = std::chrono::high_resolution_clock::now();
   std::list<Vertex<idNode> *> result2 =
-      rideshareBest(graph, users, driver, tripTime, passangers);
-  printPath(passangers, tripTime, result2, driver);
+      rideshareBest(graph, users, driver, tripTime, passengers);
+  printPath(passengers, tripTime, result2, driver);
   done = std::chrono::high_resolution_clock::now();
   std::cout << "Execution time(ms): "
             << std::chrono::duration_cast<std::chrono::milliseconds>(done -
                                                                      started)
                    .count()
             << std::endl;
+
   /** ! test build path **/
 
   return 0;
