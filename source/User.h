@@ -3,7 +3,7 @@
 
 #include <list>
 #include "Graph.h"
-#include "OSMNode.h"
+#include "osm/OSMNode.h"
 #include "timeofday.h"
 
 typedef std::string name;
@@ -49,6 +49,7 @@ class User {
   void setState(userState state);
   void setSmoker(bool smoker);
   void setDriver(bool driver, int capacity);
+  void setId(int id);
 };
 
 #endif  // __SOURCE_USER_H_

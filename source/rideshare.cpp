@@ -1,5 +1,6 @@
 #include "rideshare.h"
 #include <algorithm>
+#include "graphviewer/graphviewer.h"
 
 bool operator<(const Vertex<idNode> &a, const Vertex<idNode> &b) {
   return (a.getDist() < b.getDist()) ? true : false;
@@ -11,6 +12,8 @@ std::vector<User *> getPotentialPassengers(Graph<idNode> &graph,
   std::vector<User *> potentialPassengers;
 
   for (User *user : users) {
+    if (user == &driver) continue;
+
     /** update graph to driver start node **/
     graph.dijkstraShortestPath(driver.getRoute().startNode);
     /** get user information **/
@@ -124,9 +127,7 @@ std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
     return res;
   }
   /** reset user state **/
-  for (User *user : users) {
-    user->setState(U_WAITING);
-  }
+  for (User *user : users) user->setState(U_WAITING);
 
   res.push_back(graph.findVertex(driver.getRoute().startNode));
   std::list<Vertex<idNode> *>::iterator resIt;
@@ -262,4 +263,61 @@ void printPath(std::vector<User *> &users, minutes travelTime,
   }
 
   std::cout << "Time: " << travelTime << std::endl;
+}
+
+void displayPath(std::vector<User *> &passengers,
+                 std::list<Vertex<idNode> *> &path, User &driver) {
+  /** reset user state **/
+  for (User *passenger : passengers) passenger->setState(U_WAITING);
+
+  GraphViewer *gViewer = new GraphViewer(1200, 800, true, true);
+  gViewer->createWindow(1200, 800);
+  int itCounter = 0;
+
+  std::list<Vertex<idNode> *>::iterator pathIterator;
+  for (pathIterator = path.begin(); pathIterator != path.end();
+       ++pathIterator) {
+    Vertex<idNode> *node = *pathIterator;
+    gViewer->addNode(itCounter);
+    std::string nodeInfo = to_string(node->getInfo());
+
+    if (pathIterator == path.begin()) {
+      nodeInfo += " - " + driver.getName() + " - S";
+      gViewer->setVertexColor(itCounter, "white");
+    }
+    if (pathIterator == --path.end()) {
+      nodeInfo += " - " + driver.getName() + " - E";
+      gViewer->setVertexColor(itCounter, "black");
+    }
+
+    for (User *passenger : passengers) {
+      if (passenger->getState() == U_ARRIVED) continue;
+
+      if (node->getInfo() == passenger->getRoute().startNode &&
+          passenger->getState() == U_WAITING) {
+        nodeInfo += " - " + passenger->getName() + " - P";
+        gViewer->setVertexColor(itCounter, "green");
+        passenger->setState(U_TRAVEL);
+      }
+
+      if (node->getInfo() == passenger->getRoute().endNode &&
+          passenger->getState() == U_TRAVEL) {
+        nodeInfo += " - " + passenger->getName() + " - D";
+        gViewer->setVertexColor(itCounter, "blue");
+        passenger->setState(U_ARRIVED);
+      }
+    }
+    gViewer->setVertexLabel(itCounter, nodeInfo);
+    ++itCounter;
+  }
+
+  for (unsigned int i = 0; i < path.size() - 1; ++i) {
+    gViewer->addEdge(i, i, i + 1, EdgeType::DIRECTED);
+  }
+
+  gViewer->rearrange();
+
+  Sleep(5000);
+  gViewer->closeWindow();
+  delete (gViewer);
 }

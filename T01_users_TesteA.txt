@@ -1,6 +1,0 @@
-5
-(bobmedina, 1, 5, 1000, 1530, 1, 1, 0, 5)
-(christinesebastianoryan, 2, 6, 1020, 1100, 1, 0, 0, 0)
-(yaroslavabrendanblaese, 3, 5, 1140, 1620, 2, 0, 0, 0)
-(brennanikolchapman, 3, 2, 1115, 1220, 3, 0 ,0 ,0)
-(williamluluwashington, 6, 7, 1200, 1500, 10, 0 ,0 ,0)

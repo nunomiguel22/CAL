@@ -18,6 +18,7 @@ void User::setDriver(bool driver, int capacity) {
   carCapacity = capacity;
 }
 void User::setState(userState state) { this->state = state; }
+void User::setId(int id) { this->id = id; }
 
 User::User(Route route, std::string name, Graph<idNode> &graph) {
   state = U_WAITING;
@@ -28,4 +29,7 @@ User::User(Route route, std::string name, Graph<idNode> &graph) {
   travelTime = graph.findVertex(this->route.endNode)->getDist();
   minStartTime = this->route.departureTime.toMinutes() - this->route.tolerance;
   maxEndTime = this->route.arrivalTime.toMinutes() + this->route.tolerance;
+  carCapacity = 0;
+  driver = false;
+  smoker = false;
 }

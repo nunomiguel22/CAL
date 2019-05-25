@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#define BASE_DIR "T01/"
+#define BASE_DIR "data/T01/"
 #define BASE_DIR_CLION "./../T01/"
 
 #define EDGES_FILE "T01_edges_"
