@@ -4,6 +4,7 @@
 #include "OSMServices.h"
 #include "User.h"
 #include "rideshare.h"
+#include "menu.h"
 
 int main() {
   /** generate graph of porto **/
@@ -11,7 +12,7 @@ int main() {
   OSMServices osmServices;
   OSMCollection OSMCol = osmServices.extractOSMCollectionByCity("Porto");
   osmServices.generateGraph(graph, OSMCol);
-
+Reader r;
   /** ! test users debug **/
   std::vector<User *> users;
   Route route;
@@ -87,8 +88,10 @@ int main() {
                                                                      started)
                    .count()
             << std::endl;
-
+r.loadEdges();
+r.loadXY();
+r.showRoute(result2,driver,passengers);
   /** ! test build path **/
-
+  //mainMenu(graph);
   return 0;
 }

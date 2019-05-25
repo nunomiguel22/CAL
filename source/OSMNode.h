@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-typedef unsigned long int idNode;
+typedef int  long idNode;
 typedef double coordinate;
 
 typedef struct {
