@@ -139,18 +139,19 @@ void generatePathFast(Graph<idNode> &graph, std::vector<User *> &users) {
     return;
   }
 
-  std::cout << std::endl << "rideshareFast" << std::endl;
+  std::cout << "rideshareFast" << std::endl;
   double tripTime;
   auto started = std::chrono::high_resolution_clock::now();
   std::vector<User *> passengers;
   std::list<Vertex<idNode> *> result =
       rideshareFast(graph, users, *driver, tripTime, passengers);
   auto done = std::chrono::high_resolution_clock::now();
-  printPath(passengers, tripTime, result, *driver);
+  printPath(passengers, tripTime, result, *driver, graph);
   std::cout << "Execution time(ms): "
             << std::chrono::duration_cast<std::chrono::milliseconds>(done -
                                                                      started)
                    .count()
+            << std::endl
             << std::endl;
   displayPath(passengers, result, *driver);
 }
@@ -173,14 +174,15 @@ void generatePathBest(Graph<idNode> &graph, std::vector<User *> &users) {
 
   double tripTime;
   vector<User *> passengers;
-  cout << endl << "rideshareBest" << endl;
+  cout << "rideshareBest" << endl;
   auto started = chrono::high_resolution_clock::now();
   list<Vertex<idNode> *> result =
       rideshareBest(graph, users, *driver, tripTime, passengers);
   auto done = chrono::high_resolution_clock::now();
-  printPath(passengers, tripTime, result, *driver);
+  printPath(passengers, tripTime, result, *driver, graph);
   cout << "Execution time(ms): "
        << chrono::duration_cast<chrono::milliseconds>(done - started).count()
+       << endl
        << endl;
   displayPath(passengers, result, *driver);
 }

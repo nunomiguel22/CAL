@@ -1,7 +1,7 @@
 #include <queue>
 #include "Graph.h"
-#include "osm/OSMNode.h"
 #include "User.h"
+#include "osm/OSMNode.h"
 
 std::vector<User *> getPotentialPassangers(Graph<idNode> &graph,
                                            std::vector<User *> &users,
@@ -21,8 +21,9 @@ std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
                                       std::vector<User *> &users, User &driver,
                                       double &travelTimeTotal);
 
-void printPath(std::vector<User *> &users, minutes travelTime,
-               std::list<Vertex<idNode> *> &path, User &driver);
+void printPath(std::vector<User *> &users, double travelTime,
+               std::list<Vertex<idNode> *> &path, User &driver,
+               Graph<idNode> &graph);
 
-void displayPath(std::vector<User *> &passengers, std::list<Vertex<idNode>*> &path,
-User &driver);
+void displayPath(std::vector<User *> &passengers,
+                 std::list<Vertex<idNode> *> &path, User &driver);

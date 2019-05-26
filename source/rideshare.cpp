@@ -213,56 +213,87 @@ std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
   graph.dijkstraShortestPath(res.back()->getInfo());
   std::list<Vertex<idNode> *> finalPath =
       graph.getPath(res.back()->getInfo(), driver.getRoute().endNode);
+
   if (finalPath.size() == 0) {
     res.clear();
     return res;
   }
-
+  travelTimeTotal += finalPath.back()->getDist();
   res.insert(res.end(), ++finalPath.begin(), finalPath.end());
   return res;
 }
 
-void printPath(std::vector<User *> &users, minutes travelTime,
-               std::list<Vertex<idNode> *> &path, User &driver) {
+void printPath(std::vector<User *> &users, double travelTime,
+               std::list<Vertex<idNode> *> &path, User &driver,
+               Graph<idNode> &graph) {
   if (path.size() == 0) {
     std::cout << "Path not possible" << std::endl;
     return;
   }
 
   for (User *user : users) user->setState(U_WAITING);
+  std::cout << "Driver time tolerance:" << driver.getRoute().tolerance
+            << std::endl;
+  std::cout << "Driver departure time: " << driver.getRoute().departureTime.hour
+            << ":" << driver.getRoute().departureTime.minute << std::endl;
+  std::cout << "Driver arrival time: " << driver.getRoute().arrivalTime.hour
+            << ":" << driver.getRoute().arrivalTime.minute << std::endl;
+  std::cout << "Maximum travel time: "
+            << driver.getMaxEndTime() - driver.getMinStartTime() << std::endl
+            << std::endl;
 
   std::cout << "Path      -  Description" << std::endl;
   std::list<Vertex<idNode> *>::iterator pathIterator;
+  idNode previousNode;
+  double weight = 0;
 
   for (pathIterator = path.begin(); pathIterator != path.end();
        ++pathIterator) {
     Vertex<idNode> *node = *pathIterator;
     std::cout << node->getInfo();
+    /** get edge weight **/
 
-    if (pathIterator == path.begin())
+    if (pathIterator != path.begin()) {
+      Edge<idNode> edge = graph.findEdge(previousNode, node->getInfo());
+      if (edge.getDest() != NULL) weight += edge.getWeight();
+    }
+    previousNode = node->getInfo();
+
+    if (pathIterator == path.begin()) {
       std::cout << " - Driver '" << driver.getName() << "' departure";
+    }
     if (pathIterator == --path.end())
-      std::cout << " - Driver '" << driver.getName() << "' destination";
+      std::cout << " - Driver '" << driver.getName() << "' destination"
+                << "; Time:" << weight;
 
     for (User *user : users) {
       if (user->getState() == U_ARRIVED) continue;
 
       if (node->getInfo() == user->getRoute().startNode &&
           user->getState() == U_WAITING) {
-        std::cout << " - User '" << user->getName() << "' pickup";
+        double userStartTime = user->getRoute().departureTime.toMinutes() -
+                               driver.getRoute().departureTime.toMinutes();
+        std::string des = "";
+        if (weight < userStartTime) {
+          weight = userStartTime;
+          des = ", Waited for passenger";
+        }
+        std::cout << " - User '" << user->getName() << "' pickup"
+                  << "; Time:" << weight << des;
         user->setState(U_TRAVEL);
       }
 
       if (node->getInfo() == user->getRoute().endNode &&
           user->getState() == U_TRAVEL) {
-        std::cout << " - User '" << user->getName() << "' destination";
+        std::cout << " - User '" << user->getName() << "' destination"
+                  << "; Time:" << weight;
         user->setState(U_ARRIVED);
       }
     }
     std::cout << std::endl;
   }
 
-  std::cout << "Time: " << travelTime << std::endl;
+  std::cout << "Total travel time: " << travelTime << std::endl;
 }
 
 void displayPath(std::vector<User *> &passengers,

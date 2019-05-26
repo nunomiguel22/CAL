@@ -129,7 +129,6 @@ double Edge<T>::getWeight() const {
 }
 
 /*************************** Graph  **************************/
-
 template <class T>
 class Graph {
  private:
@@ -139,33 +138,20 @@ class Graph {
 
  public:
   Vertex<T> *findVertex(const T &in) const;
+  Edge<T> findEdge(const T &sourc, const T &dest);
   bool addVertex(const T &in);
   bool addEdge(const T &sourc, const T &dest, double w);
   unsigned int vertexSetSize() const;
   unsigned int edgeCount() const;
   std::vector<Vertex<T> *> getVertexSet() const;
-
+  /** path **/
   void dijkstraShortestPath(const T &s);
   std::list<Vertex<T> *> getPath(const T &origin, const T &dest);
-
+  /** connectivity **/
   std::vector<T> depthFirstSearch();
   bool isStronglyConnected();
 };
-
-template <class T>
-unsigned int Graph<T>::vertexSetSize() const {
-  return vertexSet.size();
-}
-
-template <class T>
-unsigned int Graph<T>::edgeCount() const {
-  return numberOfedges;
-}
-
-template <class T>
-std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
-  return vertexSet;
-}
+/** METHODS **/
 
 /*
  * Auxiliary function to find a vertex with a given content.
@@ -176,7 +162,23 @@ Vertex<T> *Graph<T>::findVertex(const T &in) const {
     if (v->info == in) return v;
   return NULL;
 }
+/*
+ * Auxiliary function to find an edge between two vertices.
+ * if no such edge is found an empty edge is returned
+ */
+template <class T>
+Edge<T> Graph<T>::findEdge(const T &sourc, const T &dest) {
+  Vertex<T> *origin = findVertex(sourc);
+  Vertex<T> *destination = findVertex(dest);
+  Edge<T> edge(NULL, 0);
 
+  if (origin == NULL || destination == NULL) return edge;
+
+  for (Edge<T> adjEdge : origin->adj)
+    if (adjEdge.dest->info == dest) edge = adjEdge;
+
+  return edge;
+}
 /*
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already
@@ -188,7 +190,6 @@ bool Graph<T>::addVertex(const T &in) {
   vertexSet.push_back(new Vertex<T>(in));
   return true;
 }
-
 /*
  * Adds an edge to a graph (this), given the contents of the source and
  * destination vertices and the edge weight (w).
@@ -204,6 +205,27 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
   ++numberOfedges;
   return true;
 }
+/*
+ * Returns the number of vertices in the graph
+ */
+template <class T>
+unsigned int Graph<T>::vertexSetSize() const {
+  return vertexSet.size();
+}
+/*
+ * Returns the number of total edges in the graph
+ */
+template <class T>
+unsigned int Graph<T>::edgeCount() const {
+  return numberOfedges;
+}
+/*
+ * Returns a vector with all vertices on the graph
+ */
+template <class T>
+std::vector<Vertex<T> *> Graph<T>::getVertexSet() const {
+  return vertexSet;
+}
 
 /**************** dijkstra shortest path algorithm ************/
 
@@ -211,7 +233,7 @@ template <class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
   MutablePriorityQueue<Vertex<T>> vertexQueue;
   /**
-   * set every vertex distance to infinity
+   * set every vertex distance to infinity and path to null
    */
   for (Vertex<T> *vertex : vertexSet) {
     vertex->dist = INF;
@@ -258,13 +280,24 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
     }
   }
 }
-
+/*
+ * Returns the best path between two vertices.
+ *
+ * Calling dijkstraShortestPath on the origin vertex is needed first to get a
+ * correct result
+ *
+ * The result is given in the form of an ordered list of vertexfrom origin to
+ * destination
+ *
+ * If no path exists or the input value are invalid an empty list is
+ * returned
+ */
 template <class T>
 std::list<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) {
   std::list<Vertex<T> *> res;
   Vertex<T> *originVertex = findVertex(origin);
-
   if (originVertex == NULL) return res;
+  if (originVertex->dist != 0) return res;
 
   Vertex<T> *tempVertex = findVertex(dest);
   while (tempVertex != NULL && tempVertex != originVertex) {
