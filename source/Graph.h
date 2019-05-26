@@ -135,6 +135,7 @@ class Graph {
  private:
   std::vector<Vertex<T> *> vertexSet;  // vertex set
   unsigned int numberOfedges = 0;
+  void depthFirstSearch(Vertex<T> *vertex, std::vector<T> &result);
 
  public:
   Vertex<T> *findVertex(const T &in) const;
@@ -146,6 +147,9 @@ class Graph {
 
   void dijkstraShortestPath(const T &s);
   std::list<Vertex<T> *> getPath(const T &origin, const T &dest);
+
+  std::vector<T> depthFirstSearch();
+  bool isStronglyConnected();
 };
 
 template <class T>
@@ -201,7 +205,7 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
   return true;
 }
 
-/**************** Single Source Shortest Path algorithms ************/
+/**************** dijkstra shortest path algorithm ************/
 
 template <class T>
 void Graph<T>::dijkstraShortestPath(const T &origin) {
@@ -253,6 +257,55 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
       }
     }
   }
+}
+/** depth first search algorithm **/
+template <class T>
+void Graph<T>::depthFirstSearch(Vertex<T> *vertex, std::vector<T> &result) {
+  vertex->visited = true;
+  result.push_back(vertex->info);
+
+  for (Edge<T> edge : vertex->getAdjEdges()) {
+    if (!edge.dest->visited) {
+      depthFirstSearch(edge.dest, result);
+    }
+  }
+}
+
+template <class T>
+std::vector<T> Graph<T>::depthFirstSearch() {
+  /** reset all vertices **/
+  std::vector<T> result;
+  for (Vertex<T> *vertex : vertexSet) vertex->visited = false;
+
+  for (Vertex<T> *vertex : vertexSet) {
+    if (!vertex->visited) {
+      depthFirstSearch(vertex, result);
+    }
+  }
+  return result;
+}
+
+/** connectivity check using dfs algorithm **/
+template <class T>
+bool Graph<T>::isStronglyConnected() {
+  if (this->depthFirstSearch().size() != this->vertexSetSize()) return false;
+
+  /** invert graph **/
+  Graph<T> gr;
+  for (Vertex<T> *vertex : vertexSet) {
+    for (Edge<T> edge : vertex->getAdjEdges()) {
+      T originVertex = vertex->getInfo();
+      T destVertex = edge.getDest()->getInfo();
+
+      gr.addVertex(originVertex);
+      gr.addVertex(destVertex);
+      gr.addEdge(destVertex, originVertex, edge.getWeight());
+    }
+  }
+
+  if (gr.depthFirstSearch().size() != gr.vertexSetSize()) return false;
+
+  return true;
 }
 
 template <class T>

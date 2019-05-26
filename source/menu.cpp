@@ -190,6 +190,9 @@ void printGraphInfo(Graph<idNode> &graph) {
   cout << "City: " << OSMCITY << endl;
   cout << "Nodes: " << graph.vertexSetSize() << endl;
   cout << "Edges: " << graph.edgeCount() << endl;
+  cout << "Inverting graph to check connectivity..." << endl;
+  std::string con = graph.isStronglyConnected() ? "yes" : "no";
+  cout << "Strongly connected: " << con << endl;
   cout << endl;
 }
 
@@ -247,7 +250,7 @@ void createNewUser(Graph<idNode> &graph, std::vector<User *> &users) {
   Route route;
   string name, node, nodeA, tolerance;
   bool smoke;
-  string smokerInput, driverInput;
+  string smokerInput;
   int depHours, depMinutes, tol;
   int long origin, destination;
 
@@ -331,23 +334,6 @@ void createNewUser(Graph<idNode> &graph, std::vector<User *> &users) {
     }
   }
 
-  cout << "Are you a driver? (Y/N) ";
-  while (smokerInput != "y" && smokerInput != "Y" && smokerInput != "n" &&
-         smokerInput != "N") {
-    cin.ignore();
-    getline(cin, smokerInput);
-
-    if (smokerInput == "y" || smokerInput == "Y") {
-      smoke = true;
-      break;
-    }
-    if (smokerInput == "n" || smokerInput == "N") {
-      smoke = false;
-      break;
-    } else {
-      cout << "Invalid option. Please, choose another: ";
-    }
-  }
   /** generate new user **/
   User *user = new User(route, name, graph);
   user->setSmoker(smoke);

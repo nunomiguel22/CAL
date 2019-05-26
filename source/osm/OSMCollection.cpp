@@ -17,25 +17,18 @@ std::vector<std::pair<idNode, idNode>> OSMCollection::getEdgesVector() {
 hour OSMCollection::getEdgesTravelTime(idNode from, idNode to) {
   OSMNode nodeFrom = this->OSMNodes.at(from);
   OSMNode nodeTo = this->OSMNodes.at(to);
-  coordinate lonDistance =
-      nodeFrom.getNodeStruct().pos.posLat - nodeTo.getNodeStruct().pos.posLat;
-  coordinate latDistance =
-      nodeFrom.getNodeStruct().pos.posLon - nodeTo.getNodeStruct().pos.posLon;
 
   const double earthRadius = 6371;
   const double dToR = MATH_PI / 180;
-
-  double dLat = latDistance * dToR;
-  double dLon = lonDistance * dToR;
-  double a = pow(sin(dLat / 2), 2) +
-             cos(nodeFrom.getNodeStruct().pos.posLat * dToR) *
-                 cos(nodeTo.getNodeStruct().pos.posLat * dToR) *
-                 +pow(sin(dLon / 2), 2);
-
-  double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-  double distance = earthRadius * c;
-
-  // double distance = sqrt(pow(xDistance, 2.0) + pow(yDistance, 2.0));
+  double lat1r, lon1r, lat2r, lon2r, u, v;
+  lat1r = nodeFrom.getNodeStruct().pos.posLat * dToR;
+  lon1r = nodeFrom.getNodeStruct().pos.posLon * dToR;
+  lat2r = nodeTo.getNodeStruct().pos.posLat * dToR;
+  lon2r = nodeTo.getNodeStruct().pos.posLon * dToR;
+  u = sin((lat2r - lat1r) / 2);
+  v = sin((lon2r - lon1r) / 2);
+  double distance = 2.0 * earthRadius *
+                    asin(sqrt(pow(u, 2) + cos(lat1r) * cos(lat2r) * pow(v, 2)));
 
   return (distance * AVERAGE_SPEED);
 }

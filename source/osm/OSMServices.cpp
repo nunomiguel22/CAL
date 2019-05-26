@@ -1,11 +1,9 @@
 #include "OSMServices.h"
 #include "../Graph.h"
 
-using namespace std;
-
 OSMCollection OSMServices::extractOSMCollectionByCity(const std::string& city) {
   OSMCollection osmCol;
-  map<idNode, Position> nodesPosition = this->getNodesXYPosition(city);
+  std::map<idNode, Position> nodesPosition = this->getNodesXYPosition(city);
 
   for (auto& it : nodesPosition) {
     osmCol.addNode(OSMNode::builder{}
@@ -20,18 +18,19 @@ OSMCollection OSMServices::extractOSMCollectionByCity(const std::string& city) {
   return osmCol;
 }
 
-map<idNode, Position> OSMServices::getNodesXYPosition(const std::string& city) {
-  map<idNode, Position> nodesPositionMap;
-  string file = BASE_DIR + city + "/" + LAT_LON_FILE + city + FILE_EXT;
+std::map<idNode, Position> OSMServices::getNodesXYPosition(
+    const std::string& city) {
+  std::map<idNode, Position> nodesPositionMap;
+  std::string file = BASE_DIR + city + "/" + LAT_LON_FILE + city + FILE_EXT;
   FileManager nodes(file);
   auto nodesXY = nodes.getVectorFileLines();
   nodesXY.erase(nodesXY.begin());
   unsigned int nodeCount = 0;
-  for (string& node : nodesXY) {
+  for (std::string& node : nodesXY) {
     ++nodeCount;
     node.erase(node.begin());
     node.erase(node.end() - 1, node.end());
-    vector<string> nodeAndPosition = nodes.explode(',', node);
+    std::vector<std::string> nodeAndPosition = nodes.explode(',', node);
     idNode id = stoi(nodeAndPosition[0]);
     Position pos;
     pos.posLat = stod(nodeAndPosition[1]);
@@ -43,24 +42,25 @@ map<idNode, Position> OSMServices::getNodesXYPosition(const std::string& city) {
   return nodesPositionMap;
 }
 
-vector<pair<idNode, idNode>> OSMServices::getEdges(const std::string& city) {
-  vector<pair<idNode, idNode>> edgesPairs;
-  string file = BASE_DIR + city + "/" + EDGES_FILE + city + FILE_EXT;
+std::vector<std::pair<idNode, idNode>> OSMServices::getEdges(
+    const std::string& city) {
+  std::vector<std::pair<idNode, idNode>> edgesPairs;
+  std::string file = BASE_DIR + city + "/" + EDGES_FILE + city + FILE_EXT;
   FileManager edges(file);
   auto edgesInOut = edges.getVectorFileLines();
   edgesInOut.erase(edgesInOut.begin());
 
   unsigned int edgeCount = 0;
-  for (string& edge : edgesInOut) {
+  for (std::string& edge : edgesInOut) {
     ++edgeCount;
     edge.erase(edge.begin());
     edge.erase(edge.end() - 1, edge.end());
 
-    vector<string> edgePair = edges.explode(',', edge);
+    std::vector<std::string> edgePair = edges.explode(',', edge);
     idNode inNode = stoi(edgePair[0]);
     idNode outNode = stoi(edgePair[1]);
 
-    edgesPairs.push_back(make_pair(inNode, outNode));
+    edgesPairs.push_back(std::make_pair(inNode, outNode));
     if (edgeCount % 1000 == 0) std::cout << ".";
   }
 
