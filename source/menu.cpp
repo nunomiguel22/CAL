@@ -191,7 +191,7 @@ void printGraphInfo(Graph<idNode> &graph) {
   cout << "Nodes: " << graph.vertexSetSize() << endl;
   cout << "Edges: " << graph.edgeCount() << endl;
   cout << "Inverting graph to check connectivity..." << endl;
-  std::string con = graph.isStronglyConnected() ? "yes" : "no";
+  std::string con = graph.isStronglyConnected() ? "Yes" : "No";
   cout << "Strongly connected: " << con << endl;
   cout << endl;
 }
@@ -345,5 +345,5 @@ void createNewUser(Graph<idNode> &graph, std::vector<User *> &users) {
   user->setId(userId);
   ++userId;
 
-  cout << endl << "User " << userId << "added with success!" << endl << endl;
+  cout << endl << "User " << userId << " added with success!" << endl << endl;
 }

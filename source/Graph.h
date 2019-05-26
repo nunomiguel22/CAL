@@ -258,6 +258,27 @@ void Graph<T>::dijkstraShortestPath(const T &origin) {
     }
   }
 }
+
+template <class T>
+std::list<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) {
+  std::list<Vertex<T> *> res;
+  Vertex<T> *originVertex = findVertex(origin);
+
+  if (originVertex == NULL) return res;
+
+  Vertex<T> *tempVertex = findVertex(dest);
+  while (tempVertex != NULL && tempVertex != originVertex) {
+    res.push_front(tempVertex);
+    tempVertex = tempVertex->getPath();
+  }
+  if (tempVertex == NULL)
+    res.clear();
+  else
+    res.push_front(tempVertex);
+
+  return res;
+}
+
 /** depth first search algorithm **/
 template <class T>
 void Graph<T>::depthFirstSearch(Vertex<T> *vertex, std::vector<T> &result) {
@@ -303,26 +324,9 @@ bool Graph<T>::isStronglyConnected() {
     }
   }
 
-  if (gr.depthFirstSearch().size() != gr.vertexSetSize()) return false;
+  if (gr.depthFirstSearch().size() != vertexSetSize()) return false;
 
   return true;
-}
-
-template <class T>
-std::list<Vertex<T> *> Graph<T>::getPath(const T &origin, const T &dest) {
-  std::list<Vertex<T> *> res;
-  Vertex<T> *originVertex = findVertex(origin);
-  Vertex<T> *tempVertex = findVertex(dest);
-  while (tempVertex != NULL && tempVertex != originVertex) {
-    res.push_front(tempVertex);
-    tempVertex = tempVertex->getPath();
-  }
-  if (tempVertex == NULL)
-    res.clear();
-  else
-    res.push_front(tempVertex);
-
-  return res;
 }
 
 #endif /* GRAPH_H_ */
