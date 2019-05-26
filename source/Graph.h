@@ -25,6 +25,7 @@ class Vertex;
 
 template <class T>
 class Vertex {
+ private:
   T info;                    // contents
   std::vector<Edge<T>> adj;  // outgoing edges
   bool visited;              // auxiliary field
@@ -103,6 +104,7 @@ Vertex<T> *Vertex<T>::getNearestVertex() const {
 
 template <class T>
 class Edge {
+ private:
   Vertex<T> *dest;  // destination vertex
   double weight;    // edge weight
  public:
@@ -130,23 +132,30 @@ double Edge<T>::getWeight() const {
 
 template <class T>
 class Graph {
+ private:
   std::vector<Vertex<T> *> vertexSet;  // vertex set
+  unsigned int numberOfedges = 0;
 
  public:
   Vertex<T> *findVertex(const T &in) const;
   bool addVertex(const T &in);
   bool addEdge(const T &sourc, const T &dest, double w);
-  int getNumVertex() const;
+  unsigned int vertexSetSize() const;
+  unsigned int edgeCount() const;
   std::vector<Vertex<T> *> getVertexSet() const;
-  bool removeEmptyVertexes();
 
   void dijkstraShortestPath(const T &s);
   std::list<Vertex<T> *> getPath(const T &origin, const T &dest);
 };
 
 template <class T>
-int Graph<T>::getNumVertex() const {
+unsigned int Graph<T>::vertexSetSize() const {
   return vertexSet.size();
+}
+
+template <class T>
+unsigned int Graph<T>::edgeCount() const {
+  return numberOfedges;
 }
 
 template <class T>
@@ -188,6 +197,7 @@ bool Graph<T>::addEdge(const T &sourc, const T &dest, double w) {
   auto v2 = findVertex(dest);
   if (v1 == NULL || v2 == NULL) return false;
   v1->addEdge(v2, w);
+  ++numberOfedges;
   return true;
 }
 

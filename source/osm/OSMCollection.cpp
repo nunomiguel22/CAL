@@ -14,18 +14,6 @@ std::vector<std::pair<idNode, idNode>> OSMCollection::getEdgesVector() {
   return this->OSMEdges;
 }
 
-// TODO: Check if collection has data and send exception
-//void OSMCollection::generateGraph(Graph<idNode> &graph) {
-//  for (auto &it : this->OSMNodes) {
-//    graph.addVertex(it.first);
-//  }
-//
-//  for (auto &it : this->OSMEdges) {
-//    hour travelTime = this->getEdgesTravelTime(it.first, it.second);
-//    graph.addEdge(it.first, it.second, travelTime);
-//  }
-//}
-
 hour OSMCollection::getEdgesTravelTime(idNode from, idNode to) {
   OSMNode nodeFrom = this->OSMNodes.at(from);
   OSMNode nodeTo = this->OSMNodes.at(to);

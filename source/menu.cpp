@@ -4,9 +4,11 @@
 #include "rideshare.h"
 #include "timeofday.h"
 
+#define OSMCITY "Porto"
+
 using namespace std;
 
-void printtitle() {
+void printTitle() {
   cout << ",------. ,--.,------.  ,------. ,---.  ,--.  ,--.  ,---.  ,------. "
           ",------. "
        << endl
@@ -183,17 +185,26 @@ void generatePathBest(Graph<idNode> &graph, std::vector<User *> &users) {
   displayPath(passengers, result, *driver);
 }
 
+void printGraphInfo(Graph<idNode> &graph) {
+  cout << endl;
+  cout << "City: " << OSMCITY << endl;
+  cout << "Nodes: " << graph.vertexSetSize() << endl;
+  cout << "Edges: " << graph.edgeCount() << endl;
+  cout << endl;
+}
+
 void mainMenu(Graph<idNode> &graph, std::vector<User *> &users) {
-  printtitle();
+  printTitle();
 
   int opcao = 0;
-  while (opcao != 6) {
+  while (opcao != 7) {
     cout << " 1 - Create new Client" << endl;
     cout << " 2 - Become driver (add car/change capacity)" << endl;
     cout << " 3 - Stop driving (remove car)" << endl;
     cout << " 4 - Generate path (rideshareFast)" << endl;
     cout << " 5 - Generate path (rideshareBest)" << endl;
-    cout << " 6 - exit" << endl;
+    cout << " 6 - Graph information" << endl;
+    cout << " 7 - exit" << endl;
     cout << endl;
     cout << "Choose an option: ";
     if (cin >> opcao) {
@@ -214,6 +225,9 @@ void mainMenu(Graph<idNode> &graph, std::vector<User *> &users) {
           generatePathBest(graph, users);
           break;
         case 6:
+          printGraphInfo(graph);
+          break;
+        case 7:
           return;
         default:
           cout << "Invalid option. Please, choose another option: ";
@@ -227,7 +241,7 @@ void mainMenu(Graph<idNode> &graph, std::vector<User *> &users) {
 }
 
 void createNewUser(Graph<idNode> &graph, std::vector<User *> &users) {
-  printtitle();
+  printTitle();
   cout << endl;
   static int userId = users.size();
   Route route;

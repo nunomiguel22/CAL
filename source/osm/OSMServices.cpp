@@ -25,10 +25,10 @@ map<idNode, Position> OSMServices::getNodesXYPosition(const std::string& city) {
   string file = BASE_DIR + city + "/" + LAT_LON_FILE + city + FILE_EXT;
   FileManager nodes(file);
   auto nodesXY = nodes.getVectorFileLines();
-  // TODO: use the first line to check if the number of edges is correct
   nodesXY.erase(nodesXY.begin());
-
+  unsigned int nodeCount = 0;
   for (string& node : nodesXY) {
+    ++nodeCount;
     node.erase(node.begin());
     node.erase(node.end() - 1, node.end());
     vector<string> nodeAndPosition = nodes.explode(',', node);
@@ -36,8 +36,8 @@ map<idNode, Position> OSMServices::getNodesXYPosition(const std::string& city) {
     Position pos;
     pos.posLat = stod(nodeAndPosition[1]);
     pos.posLon = stod(nodeAndPosition[2]);
-
     nodesPositionMap.insert(std::pair<idNode, Position>(id, pos));
+    if (nodeCount % 1000 == 0) std::cout << ".";
   }
 
   return nodesPositionMap;
@@ -48,18 +48,20 @@ vector<pair<idNode, idNode>> OSMServices::getEdges(const std::string& city) {
   string file = BASE_DIR + city + "/" + EDGES_FILE + city + FILE_EXT;
   FileManager edges(file);
   auto edgesInOut = edges.getVectorFileLines();
-  // TODO: use the first line to check if the number of edges is correct
   edgesInOut.erase(edgesInOut.begin());
 
+  unsigned int edgeCount = 0;
   for (string& edge : edgesInOut) {
+    ++edgeCount;
     edge.erase(edge.begin());
     edge.erase(edge.end() - 1, edge.end());
-    //}
+
     vector<string> edgePair = edges.explode(',', edge);
     idNode inNode = stoi(edgePair[0]);
     idNode outNode = stoi(edgePair[1]);
 
     edgesPairs.push_back(make_pair(inNode, outNode));
+    if (edgeCount % 1000 == 0) std::cout << ".";
   }
 
   return edgesPairs;
@@ -67,12 +69,18 @@ vector<pair<idNode, idNode>> OSMServices::getEdges(const std::string& city) {
 
 void OSMServices::generateGraph(Graph<idNode>& graph,
                                 OSMCollection& osmCollection) {
+  unsigned int vertexCount = 0;
   for (auto& it : osmCollection.getNodeMap()) {
+    ++vertexCount;
     graph.addVertex(it.first);
+    if (vertexCount % 1000 == 0) std::cout << ".";
   }
 
+  unsigned int edgeCount = 0;
   for (auto& it : osmCollection.getEdgesVector()) {
+    ++edgeCount;
     hour travelTime = osmCollection.getEdgesTravelTime(it.first, it.second);
     graph.addEdge(it.first, it.second, travelTime);
+    if (edgeCount % 1000 == 0) std::cout << ".";
   }
 }
