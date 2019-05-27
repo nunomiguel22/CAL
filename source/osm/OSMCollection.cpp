@@ -6,6 +6,14 @@ void OSMCollection::addNode(OSMNode node) {
 
 std::map<idNode, OSMNode> OSMCollection::getNodeMap() { return this->OSMNodes; }
 
+OSMNode* OSMCollection::getNode(idNode node) {
+  OSMNode* res = NULL;
+  auto mapIt = OSMNodes.find(node);
+  if (mapIt != OSMNodes.end()) res = &mapIt->second;
+
+  return res;
+}
+
 void OSMCollection::setEdges(std::vector<std::pair<idNode, idNode>> edges) {
   this->OSMEdges = std::move(edges);
 }
@@ -14,7 +22,7 @@ std::vector<std::pair<idNode, idNode>> OSMCollection::getEdgesVector() {
   return this->OSMEdges;
 }
 
-hour OSMCollection::getEdgesTravelTime(idNode from, idNode to) {
+double OSMCollection::getEdgesTravelTime(idNode from, idNode to) {
   OSMNode nodeFrom = this->OSMNodes.at(from);
   OSMNode nodeTo = this->OSMNodes.at(to);
 

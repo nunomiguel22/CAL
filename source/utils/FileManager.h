@@ -10,6 +10,7 @@
 
 #define EDGES_FILE "T01_edges_"
 #define LAT_LON_FILE "T01_nodes_lat_lon_"
+#define STREET_FILE "data/T01/Porto/T01_nodes_name_porto.txt"
 #define NODES_X_Y_FILE "T01_nodes_X_Y_"
 #define TAGS_FILE "T01_tags_"
 #define FILE_EXT ".txt"

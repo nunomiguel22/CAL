@@ -10,17 +10,19 @@
 int main() {
   /** generate graph of porto **/
   Graph<idNode> graph;
-  OSMServices osmServices;
   std::cout << "Reading OSM data:";
-  OSMCollection OSMCol = osmServices.extractOSMCollectionByCity("Porto");
+  OSMCollection osmCol = OSMServices::extractOSMCollectionByCity("Porto");
   std::cout << std::endl << "Building Graph:";
-  osmServices.generateGraph(graph, OSMCol);
+  OSMServices::generateGraph(graph, osmCol);
   std::cout << std::endl << std::endl;
+  OSMServices::addStreetNames(osmCol);
+
+  std::cout << *osmCol.getNode(90380817) << std::endl;
   /** read users **/
   std::vector<User *> users;
   readUsers(users, graph);
   /** launch menu **/
-  mainMenu(graph, users);
+  mainMenu(graph, users, osmCol);
   /** save and delete users **/
   saveUsers(users);
   for (User *user : users) delete user;

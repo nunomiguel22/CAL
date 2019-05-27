@@ -13,17 +13,14 @@
 // Assuming that X Y coordinates will give distance in km
 #define AVERAGE_SPEED 50
 
-typedef double hour;
-
-// TODO: Should this be a template class?
 class OSMCollection {
  public:
   void addNode(OSMNode node);
   std::map<idNode, OSMNode> getNodeMap();
+  OSMNode* getNode(idNode node);
   void setEdges(std::vector<std::pair<idNode, idNode>> edges);
   std::vector<std::pair<idNode, idNode>> getEdgesVector();
-  //  void generateGraph(Graph<idNode> &graph);
-  hour getEdgesTravelTime(idNode from, idNode to);
+  double getEdgesTravelTime(idNode from, idNode to);
 
  private:
   std::map<idNode, OSMNode> OSMNodes;

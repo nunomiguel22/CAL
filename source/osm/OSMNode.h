@@ -22,8 +22,11 @@ class OSMNode {
  public:
   class builder;
   explicit OSMNode(idNode id, Node node);
-  idNode getOSMNodeId();
+  idNode getOSMNodeId() const;
+  std::string getName() const;
   Node getNodeStruct();
+  void setName(std::string name);
+  friend std::ostream& operator<<(std::ostream& os, const OSMNode& node);
 
  private:
   idNode nodeId;

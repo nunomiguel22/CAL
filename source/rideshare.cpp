@@ -223,7 +223,7 @@ std::list<Vertex<idNode> *> buildPath(Graph<idNode> &graph,
   return res;
 }
 
-void printPath(std::vector<User *> &users, double travelTime,
+void printPath(std::vector<User *> &users, OSMCollection &osmCol,
                std::list<Vertex<idNode> *> &path, User &driver,
                Graph<idNode> &graph) {
   if (path.size() == 0) {
@@ -242,7 +242,7 @@ void printPath(std::vector<User *> &users, double travelTime,
             << driver.getMaxEndTime() - driver.getMinStartTime() << std::endl
             << std::endl;
 
-  std::cout << "Path      -  Description" << std::endl;
+  std::cout << "Path        - Description" << std::endl;
   std::list<Vertex<idNode> *>::iterator pathIterator;
   idNode previousNode;
   double weight = 0;
@@ -250,7 +250,9 @@ void printPath(std::vector<User *> &users, double travelTime,
   for (pathIterator = path.begin(); pathIterator != path.end();
        ++pathIterator) {
     Vertex<idNode> *node = *pathIterator;
-    std::cout << node->getInfo();
+    OSMNode *osmNode = osmCol.getNode(node->getInfo());
+
+    std::cout << *osmNode;
     /** get edge weight **/
 
     if (pathIterator != path.begin()) {
@@ -292,8 +294,6 @@ void printPath(std::vector<User *> &users, double travelTime,
     }
     std::cout << std::endl;
   }
-
-  std::cout << "Total travel time: " << travelTime << std::endl;
 }
 
 void displayPath(std::vector<User *> &passengers,
@@ -301,8 +301,8 @@ void displayPath(std::vector<User *> &passengers,
   /** reset user state **/
   for (User *passenger : passengers) passenger->setState(U_WAITING);
 
-  GraphViewer *gViewer = new GraphViewer(1200, 800, true, true);
-  gViewer->createWindow(1200, 800);
+  GraphViewer *gViewer = new GraphViewer(600, 400, true, true);
+  gViewer->createWindow(600, 400);
   int itCounter = 0;
 
   std::list<Vertex<idNode> *>::iterator pathIterator;
@@ -348,7 +348,11 @@ void displayPath(std::vector<User *> &passengers,
 
   gViewer->rearrange();
 
-  Sleep(5000);
+  std::cout << std::endl
+            << "Press Enter to close graphviewer and continue" << std::endl;
+  std::cin.ignore();
+  std::cin.get();
+
   gViewer->closeWindow();
   delete (gViewer);
 }

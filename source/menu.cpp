@@ -123,7 +123,8 @@ void removeDriver(std::vector<User *> &users) {
   users.at(id)->setDriver(false, 0);
 }
 
-void generatePathFast(Graph<idNode> &graph, std::vector<User *> &users) {
+void generatePathFast(Graph<idNode> &graph, std::vector<User *> &users,
+                      OSMCollection &osmCol) {
   unsigned int driverId;
   cout << "Enter driver id:";
   cin >> driverId;
@@ -146,7 +147,7 @@ void generatePathFast(Graph<idNode> &graph, std::vector<User *> &users) {
   std::list<Vertex<idNode> *> result =
       rideshareFast(graph, users, *driver, tripTime, passengers);
   auto done = std::chrono::high_resolution_clock::now();
-  printPath(passengers, tripTime, result, *driver, graph);
+  printPath(passengers, osmCol, result, *driver, graph);
   std::cout << "Execution time(ms): "
             << std::chrono::duration_cast<std::chrono::milliseconds>(done -
                                                                      started)
@@ -156,7 +157,8 @@ void generatePathFast(Graph<idNode> &graph, std::vector<User *> &users) {
   displayPath(passengers, result, *driver);
 }
 
-void generatePathBest(Graph<idNode> &graph, std::vector<User *> &users) {
+void generatePathBest(Graph<idNode> &graph, std::vector<User *> &users,
+                      OSMCollection &osmCol) {
   unsigned int driverId;
   cout << "Enter driver id:";
   cin >> driverId;
@@ -179,7 +181,7 @@ void generatePathBest(Graph<idNode> &graph, std::vector<User *> &users) {
   list<Vertex<idNode> *> result =
       rideshareBest(graph, users, *driver, tripTime, passengers);
   auto done = chrono::high_resolution_clock::now();
-  printPath(passengers, tripTime, result, *driver, graph);
+  printPath(passengers, osmCol, result, *driver, graph);
   cout << "Execution time(ms): "
        << chrono::duration_cast<chrono::milliseconds>(done - started).count()
        << endl
@@ -198,7 +200,8 @@ void printGraphInfo(Graph<idNode> &graph) {
   cout << endl;
 }
 
-void mainMenu(Graph<idNode> &graph, std::vector<User *> &users) {
+void mainMenu(Graph<idNode> &graph, std::vector<User *> &users,
+              OSMCollection &osmCol) {
   printTitle();
 
   int opcao = 0;
@@ -224,10 +227,10 @@ void mainMenu(Graph<idNode> &graph, std::vector<User *> &users) {
           removeDriver(users);
           break;
         case 4:
-          generatePathFast(graph, users);
+          generatePathFast(graph, users, osmCol);
           break;
         case 5:
-          generatePathBest(graph, users);
+          generatePathBest(graph, users, osmCol);
           break;
         case 6:
           printGraphInfo(graph);

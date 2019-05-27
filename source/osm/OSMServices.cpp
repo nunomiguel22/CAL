@@ -1,9 +1,10 @@
 #include "OSMServices.h"
+#include <fstream>
 #include "../Graph.h"
 
 OSMCollection OSMServices::extractOSMCollectionByCity(const std::string& city) {
   OSMCollection osmCol;
-  std::map<idNode, Position> nodesPosition = this->getNodesXYPosition(city);
+  std::map<idNode, Position> nodesPosition = getNodesXYPosition(city);
 
   for (auto& it : nodesPosition) {
     osmCol.addNode(OSMNode::builder{}
@@ -13,9 +14,28 @@ OSMCollection OSMServices::extractOSMCollectionByCity(const std::string& city) {
                        .build());
   }
 
-  osmCol.setEdges(this->getEdges(city));
+  osmCol.setEdges(getEdges(city));
 
   return osmCol;
+}
+
+void OSMServices::addStreetNames(OSMCollection& osmCollection) {
+  std::ifstream streetFile(STREET_FILE);
+  if (streetFile.is_open()) {
+    idNode node;
+    while (streetFile >> node) {
+      OSMNode* currentNode = osmCollection.getNode(node);
+      if (currentNode == NULL) {
+        streetFile.ignore(256, '\n');
+        continue;
+      }
+      streetFile.ignore(2);
+      std::string streetName;
+      std::getline(streetFile, streetName);
+      currentNode->setName(streetName);
+    }
+    streetFile.close();
+  }
 }
 
 std::map<idNode, Position> OSMServices::getNodesXYPosition(
@@ -79,7 +99,7 @@ void OSMServices::generateGraph(Graph<idNode>& graph,
   unsigned int edgeCount = 0;
   for (auto& it : osmCollection.getEdgesVector()) {
     ++edgeCount;
-    hour travelTime = osmCollection.getEdgesTravelTime(it.first, it.second);
+    double travelTime = osmCollection.getEdgesTravelTime(it.first, it.second);
     graph.addEdge(it.first, it.second, travelTime);
     if (edgeCount % 1000 == 0) std::cout << ".";
   }
