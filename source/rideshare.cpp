@@ -1,5 +1,6 @@
 #include "rideshare.h"
 #include <algorithm>
+#include <sstream>
 #include "graphviewer/graphviewer.h"
 
 bool operator<(const Vertex<idNode> &a, const Vertex<idNode> &b) {
@@ -249,10 +250,11 @@ void printPath(std::vector<User *> &users, OSMCollection &osmCol,
 
   for (pathIterator = path.begin(); pathIterator != path.end();
        ++pathIterator) {
+    std::stringstream ss;
     Vertex<idNode> *node = *pathIterator;
     OSMNode *osmNode = osmCol.getNode(node->getInfo());
 
-    std::cout << *osmNode;
+    ss << *osmNode;
     /** get edge weight **/
 
     if (pathIterator != path.begin()) {
@@ -262,11 +264,11 @@ void printPath(std::vector<User *> &users, OSMCollection &osmCol,
     previousNode = node->getInfo();
 
     if (pathIterator == path.begin()) {
-      std::cout << " - Driver '" << driver.getName() << "' departure";
+      ss << " - Driver '" << driver.getName() << "' departure";
     }
     if (pathIterator == --path.end())
-      std::cout << " - Driver '" << driver.getName() << "' destination"
-                << "; Time:" << weight;
+      ss << " - Driver '" << driver.getName() << "' destination"
+         << "; Time:" << weight;
 
     for (User *user : users) {
       if (user->getState() == U_ARRIVED) continue;
@@ -280,19 +282,19 @@ void printPath(std::vector<User *> &users, OSMCollection &osmCol,
           weight = userStartTime;
           des = ", Waited for passenger";
         }
-        std::cout << " - User '" << user->getName() << "' pickup"
-                  << "; Time:" << weight << des;
+        ss << " - User '" << user->getName() << "' pickup"
+           << "; Time:" << weight << des;
         user->setState(U_TRAVEL);
       }
 
       if (node->getInfo() == user->getRoute().endNode &&
           user->getState() == U_TRAVEL) {
-        std::cout << " - User '" << user->getName() << "' destination"
-                  << "; Time:" << weight;
+        ss << " - User '" << user->getName() << "' destination"
+           << "; Time:" << weight;
         user->setState(U_ARRIVED);
       }
     }
-    std::cout << std::endl;
+    std::cout << ss.str() << std::endl;
   }
 }
 
@@ -301,7 +303,7 @@ void displayPath(std::vector<User *> &passengers,
   /** reset user state **/
   for (User *passenger : passengers) passenger->setState(U_WAITING);
 
-  GraphViewer *gViewer = new GraphViewer(600, 400, true, true);
+  GraphViewer *gViewer = new GraphViewer(600, 400, true, 5000);
   gViewer->createWindow(600, 400);
   int itCounter = 0;
 

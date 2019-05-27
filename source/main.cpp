@@ -17,7 +17,6 @@ int main() {
   std::cout << std::endl << std::endl;
   OSMServices::addStreetNames(osmCol);
 
-  std::cout << *osmCol.getNode(90380817) << std::endl;
   /** read users **/
   std::vector<User *> users;
   readUsers(users, graph);

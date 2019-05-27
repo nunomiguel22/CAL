@@ -3,7 +3,7 @@
 #include <string>
 
 #ifdef linux
-pid_t GraphViewer::procId = NULL;
+pid_t GraphViewer::procId = 0;
 #endif
 short GraphViewer::port = 7772;
 
@@ -15,6 +15,8 @@ GraphViewer::GraphViewer(int width, int height, bool dynamic) {
 GraphViewer::GraphViewer(int width, int height, bool dynamic, int port_n) {
   initialize(width, height, dynamic, port_n);
 }
+
+GraphViewer::~GraphViewer() { delete con; }
 
 void GraphViewer::initialize(int width, int height, bool dynamic, int port_n) {
   this->width = width;

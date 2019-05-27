@@ -32,6 +32,9 @@ void OSMServices::addStreetNames(OSMCollection& osmCollection) {
       streetFile.ignore(2);
       std::string streetName;
       std::getline(streetFile, streetName);
+#ifdef linux
+      streetName.pop_back();
+#endif
       currentNode->setName(streetName);
     }
     streetFile.close();

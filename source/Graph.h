@@ -137,6 +137,7 @@ class Graph {
   void depthFirstSearch(Vertex<T> *vertex, std::vector<T> &result);
 
  public:
+  ~Graph<T>();
   Vertex<T> *findVertex(const T &in) const;
   Edge<T> findEdge(const T &sourc, const T &dest);
   bool addVertex(const T &in);
@@ -152,6 +153,13 @@ class Graph {
   bool isStronglyConnected();
 };
 /** METHODS **/
+/*
+ * Graph destructor
+ */
+template <class T>
+Graph<T>::~Graph<T>() {
+  for (Vertex<T> *vertex : vertexSet) delete vertex;
+}
 
 /*
  * Auxiliary function to find a vertex with a given content.

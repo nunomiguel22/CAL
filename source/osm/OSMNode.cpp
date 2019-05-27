@@ -7,7 +7,7 @@ OSMNode::OSMNode(idNode id, Node node) {
   this->node = std::move(node);
 }
 
-idNode OSMNode::getOSMNodeId() const { return this->nodeId; }
+idNode OSMNode::getOSMNodeId() const { return this->node.id; }
 
 Node OSMNode::getNodeStruct() { return this->node; }
 
@@ -31,8 +31,8 @@ OSMNode::builder& OSMNode::builder::addYcoord(coordinate yCoord) {
 void OSMNode::setName(std::string name) { node.name = name; }
 
 std::ostream& operator<<(std::ostream& os, const OSMNode& node) {
-  os << std::left << std::setw(11) << node.getOSMNodeId() << " - "
-     << std::setw(40) << node.getName();
+  os << std::setw(11) << std::left << node.getOSMNodeId() << " - "
+     << std::setw(40) << std::left << node.getName();
   return os;
 }
 
