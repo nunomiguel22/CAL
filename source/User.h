@@ -52,4 +52,6 @@ class User {
   void setId(int id);
 };
 
+bool userPointerCompare(User* a, User* b);
+
 #endif  // __SOURCE_USER_H_

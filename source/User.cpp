@@ -33,3 +33,8 @@ User::User(Route route, std::string name, Graph<idNode> &graph) {
   driver = false;
   smoker = false;
 }
+
+bool userPointerCompare(User *a, User *b) {
+  if (!a->isSmoker() && b->isSmoker()) return true;
+  return false;
+}

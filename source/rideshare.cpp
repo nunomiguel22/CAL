@@ -56,6 +56,10 @@ std::list<Vertex<idNode> *> rideshareFast(Graph<idNode> &graph,
       getPotentialPassengers(graph, users, driver);
   if (potentialPassengers.size() == 0) return driver.getPath();
 
+  if (!driver.isSmoker())
+    std::sort(potentialPassengers.begin(), potentialPassengers.end(),
+              userPointerCompare);
+
   std::list<Vertex<idNode> *> path = driver.getPath();
   double timeToDriverDest;
   for (User *passenger : potentialPassengers) {

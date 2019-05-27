@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
   /** read users **/
   std::vector<User *> users;
   readUsers(users, graph);
+
   /** launch menu **/
   mainMenu(graph, users, osmCol);
   /** save and delete users **/
