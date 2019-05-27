@@ -134,6 +134,7 @@ class Graph {
  private:
   std::vector<Vertex<T> *> vertexSet;  // vertex set
   unsigned int numberOfedges = 0;
+  bool graphViewer = true;
   void depthFirstSearch(Vertex<T> *vertex, std::vector<T> &result);
 
  public:
@@ -145,6 +146,9 @@ class Graph {
   unsigned int vertexSetSize() const;
   unsigned int edgeCount() const;
   std::vector<Vertex<T> *> getVertexSet() const;
+  bool isGraphViewer() const;
+  void setGraphViewer(bool gv);
+
   /** path **/
   void dijkstraShortestPath(const T &s);
   std::list<Vertex<T> *> getPath(const T &origin, const T &dest);
@@ -159,6 +163,17 @@ class Graph {
 template <class T>
 Graph<T>::~Graph<T>() {
   for (Vertex<T> *vertex : vertexSet) delete vertex;
+}
+/*
+ * GraphViewer
+ */
+template <class T>
+bool Graph<T>::isGraphViewer() const {
+  return graphViewer;
+}
+template <class T>
+void Graph<T>::setGraphViewer(bool gv) {
+  graphViewer = gv;
 }
 
 /*

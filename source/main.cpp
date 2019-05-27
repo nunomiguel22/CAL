@@ -7,9 +7,16 @@
 #include "osm/OSMServices.h"
 #include "rideshare.h"
 
-int main() {
+int main(int argc, char *argv[]) {
+  bool gvOn = true;
+  if (argc > 1) {
+    std::string arg(argv[1]);
+    if (arg == "-nogv") gvOn = false;
+  }
+
   /** generate graph of porto **/
   Graph<idNode> graph;
+  graph.setGraphViewer(gvOn);
   std::cout << "Reading OSM data:";
   OSMCollection osmCol = OSMServices::extractOSMCollectionByCity("Porto");
   std::cout << std::endl << "Building Graph:";

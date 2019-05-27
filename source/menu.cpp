@@ -154,7 +154,7 @@ void generatePathFast(Graph<idNode> &graph, std::vector<User *> &users,
                    .count()
             << std::endl
             << std::endl;
-  displayPath(passengers, result, *driver);
+  if (graph.isGraphViewer()) displayPath(passengers, result, *driver);
 }
 
 void generatePathBest(Graph<idNode> &graph, std::vector<User *> &users,
@@ -186,7 +186,7 @@ void generatePathBest(Graph<idNode> &graph, std::vector<User *> &users,
        << chrono::duration_cast<chrono::milliseconds>(done - started).count()
        << endl
        << endl;
-  displayPath(passengers, result, *driver);
+  if (graph.isGraphViewer()) displayPath(passengers, result, *driver);
 }
 
 void printGraphInfo(Graph<idNode> &graph) {
