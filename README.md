@@ -1,5 +1,5 @@
 # FEUP-CAL
-Project for Algorithm Conception and Analysis class on a ridesharing algorithm using "dijkstra shortest path" and "depth first search"
+Project for Algorithm Conception and Analysis class on a ridesharing program using "dijkstra shortest path" and "depth first search"
 algorithms among others.
 
  ---
